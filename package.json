@@ -1,0 +1,27 @@
+{
+  "name": "oc-setup",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "oc-setup": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target node && bun build src/cli.ts --outdir dist --target node",
+    "build:plugin": "bun build src/index.ts --outdir dist --target node",
+    "build:cli": "bun build src/cli.ts --outdir dist --target node",
+    "test": "bun test",
+    "dev": "bun run src/cli.ts"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "latest",
+    "zod": "latest",
+    "commander": "latest",
+    "@inquirer/prompts": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "latest"
+  },
+  "license": "MIT"
+}
