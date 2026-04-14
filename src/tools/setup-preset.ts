@@ -17,13 +17,17 @@ export const setupPresetApply: ReturnType<typeof tool> = tool({
     name: schema.string().describe("Preset name (e.g., 'budget', 'balanced', 'frontend-ts', 'backend-go')"),
   },
   async execute(args, context) {
-    const result = await applyPreset(args.name, context.directory)
+    try {
+      const result = await applyPreset(args.name, context.directory)
 
-    if (!result.success) {
-      return `❌ Failed to apply preset '${args.name}'.\n\n${result.warnings.join("\n")}`
+      if (!result.success) {
+        return `❌ Failed to apply preset '${args.name}'.\n\n${result.warnings.join("\n")}`
+      }
+
+      const filesList = result.files.map((f) => `  • ${f}`).join("\n")
+      return `✅ Preset '${args.name}' applied successfully!\n\nGenerated files:\n${filesList}${result.warnings.length > 0 ? `\n\nWarnings:\n${result.warnings.join("\n")}` : ""}`
+    } catch (error) {
+      return `❌ Failed to apply preset '${args.name}'.\n\nError: ${error instanceof Error ? error.message : String(error)}`
     }
-
-    const filesList = result.files.map((f) => `  • ${f}`).join("\n")
-    return `✅ Preset '${args.name}' applied successfully!\n\nGenerated files:\n${filesList}${result.warnings.length > 0 ? `\n\nWarnings:\n${result.warnings.join("\n")}` : ""}`
   },
 })

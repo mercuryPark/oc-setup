@@ -1,6 +1,19 @@
-import { mkdirSync, existsSync, writeFileSync, cpSync } from "fs"
+import { mkdirSync, existsSync, writeFileSync, cpSync, renameSync } from "fs"
 import { join, dirname } from "path"
 import type { UserProfile, OpenCodeConfig, PermissionConfig, AgentConfig, MCPConfig, LSPConfig } from "../types"
+
+/**
+ * Write file atomically using temp file + rename pattern
+ */
+function atomicWrite(filePath: string, content: string): void {
+  const dir = dirname(filePath)
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true })
+  }
+  const tempPath = `${filePath}.tmp.${Date.now()}`
+  writeFileSync(tempPath, content, "utf-8")
+  renameSync(tempPath, filePath)
+}
 
 const PROVIDER_API_KEYS: Record<string, string> = {
   anthropic: "ANTHROPIC_API_KEY",
@@ -123,7 +136,7 @@ export function generateProjectConfig(profile: UserProfile): OpenCodeConfig {
 
 function backupFile(path: string): void {
   if (existsSync(path)) {
-    const backupPath = `${path}.bak`
+    const backupPath = `${path}.bak.${Date.now()}`
     cpSync(path, backupPath)
   }
 }
@@ -137,7 +150,7 @@ export function writeConfig(config: OpenCodeConfig, filePath: string): void {
   backupFile(filePath)
 
   const content = JSON.stringify(config, null, 2) + "\n"
-  writeFileSync(filePath, content, "utf-8")
+  atomicWrite(filePath, content)
 }
 
 export function writeGlobalConfig(profile: UserProfile, homeDir: string): void {

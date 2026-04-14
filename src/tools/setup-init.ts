@@ -1,5 +1,6 @@
 import { tool } from "@opencode-ai/plugin"
 import { homedir } from "os"
+import { join } from "path"
 import type { UserProfile } from "../types"
 import { writeGlobalConfig, writeProjectConfig } from "../core/config-generator.js"
 import { generateAgentsMD, writeAgentsMD } from "../core/agents-md-generator.js"
@@ -30,30 +31,30 @@ export const setupInit: ReturnType<typeof tool> = tool({
 
     try {
       writeGlobalConfig(profile, homeDir)
-      generatedFiles.push(`${homeDir}/.config/opencode/opencode.json`)
+      generatedFiles.push(join(homeDir, ".config/opencode/opencode.json"))
 
       writeProjectConfig(profile, projectDir)
-      generatedFiles.push(`${projectDir}/opencode.json`)
+      generatedFiles.push(join(projectDir, "opencode.json"))
 
       const agentsMD = generateAgentsMD(profile)
       writeAgentsMD(agentsMD, projectDir)
-      generatedFiles.push(`${projectDir}/AGENTS.md`)
+      generatedFiles.push(join(projectDir, "AGENTS.md"))
 
       const commands = generateCommands()
       writeCommands(commands, projectDir)
-      generatedFiles.push(`${projectDir}/.opencode/commands/`)
+      generatedFiles.push(join(projectDir, ".opencode/commands/"))
 
       const agents = generateAgents()
       writeAgents(agents, projectDir)
-      generatedFiles.push(`${projectDir}/.opencode/agents/`)
+      generatedFiles.push(join(projectDir, ".opencode/agents/"))
 
       const skills = generateSkills(profile)
       writeSkills(skills, projectDir)
-      generatedFiles.push(`${projectDir}/.opencode/skills/`)
+      generatedFiles.push(join(projectDir, ".opencode/skills/"))
 
       const envContent = generateEnvExample(profile)
       writeEnvExample(envContent, projectDir)
-      generatedFiles.push(`${projectDir}/.env.example`)
+      generatedFiles.push(join(projectDir, ".env.example"))
 
       const filesList = generatedFiles.map((f) => `  • ${f}`).join("\n")
 

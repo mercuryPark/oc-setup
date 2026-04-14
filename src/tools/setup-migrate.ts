@@ -11,9 +11,14 @@ export const setupMigrate: ReturnType<typeof tool> = tool({
   },
   async execute(args, context) {
     const rootPath = args.sourcePath || context.directory
-    if (!args.tool) {
-      return autoMigrate(rootPath)
+    try {
+      if (!args.tool) {
+        return autoMigrate(rootPath)
+      }
+      return runMigration(args.tool as "claude-code" | "cursor" | "aider", rootPath)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      return `Migration failed: ${message}`
     }
-    return runMigration(args.tool as "claude-code" | "cursor" | "aider", rootPath)
   },
 })
