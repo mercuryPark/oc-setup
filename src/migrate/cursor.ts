@@ -1,4 +1,3 @@
-import { existsSync } from "fs"
 import { join } from "path"
 import { readFileSafe, writeFileSafe, backupFile, formatMigrationResult } from "./common.js"
 
@@ -23,7 +22,7 @@ export function migrateCursor(rootPath: string): string {
         suggestions.push("MCP 서버 설정 감지됨 - opencode.json의 mcp 섹션에 추가 필요")
       }
     } catch {
-      // skip
+      warnings.push("MCP 설정 파싱 실패 - JSON 형식 오류")
     }
   }
 

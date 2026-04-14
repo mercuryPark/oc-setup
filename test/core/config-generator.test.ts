@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach } from "bun:test"
-import { mkdirSync, rmSync, existsSync, writeFileSync } from "fs"
+import { mkdirSync, rmSync, existsSync, writeFileSync, readdirSync } from "fs"
 import { join } from "path"
 import {
   generateGlobalConfig,
@@ -247,9 +247,11 @@ describe("writeConfig", () => {
     writeConfig(config1, filePath)
     expect(existsSync(filePath)).toBe(true)
 
-    // Write second time - should create backup
+    // Write second time - should create backup with timestamp
     writeConfig(config2, filePath)
-    expect(existsSync(`${filePath}.bak`)).toBe(true)
+    const files = readdirSync(testDir)
+    const hasBackup = files.some(f => f.startsWith("opencode.json.bak."))
+    expect(hasBackup).toBe(true)
   })
 })
 

@@ -33,8 +33,8 @@ export function copyDirectory(src: string, dest: string): string[] {
       try {
         cpSync(srcPath, destPath)
         copied.push(destPath)
-      } catch {
-        // skip
+      } catch (err) {
+        console.warn(`Failed to copy ${srcPath}: ${err instanceof Error ? err.message : String(err)}`)
       }
     }
   }

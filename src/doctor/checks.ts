@@ -1,4 +1,5 @@
 import { join } from "path"
+import { homedir } from "os"
 import { existsSync, readFileSync } from "fs"
 import { execSync } from "child_process"
 
@@ -71,8 +72,8 @@ function checkApiKeys(): CheckResult {
 }
 
 function checkAuthFile(): CheckResult {
-  const authPath = join(process.env.HOME || "~", ".local/share/opencode/auth.json")
-  const expandedPath = authPath.replace("~", process.env.HOME || "")
+  const authPath = join(homedir(), ".local/share/opencode/auth.json")
+  const expandedPath = authPath.replace("~", homedir())
 
   if (existsSync(expandedPath)) {
     return { name: "Auth File", status: "pass", message: "auth.json exists" }
@@ -82,8 +83,8 @@ function checkAuthFile(): CheckResult {
 }
 
 function checkConfig(): CheckResult {
-  const configPath = join(process.env.HOME || "~", ".config/opencode/opencode.json")
-  const expandedPath = configPath.replace("~", process.env.HOME || "")
+  const configPath = join(homedir(), ".config/opencode/opencode.json")
+  const expandedPath = configPath.replace("~", homedir())
 
   if (!existsSync(expandedPath)) {
     return { name: "Global Config", status: "warn", message: "Global opencode.json not found", fix: "Run 'opencode-setup init' or configure OpenCode manually" }
@@ -143,8 +144,8 @@ function checkLSP(): CheckResult {
 }
 
 function checkPlugins(): CheckResult {
-  const configPath = join(process.env.HOME || "~", ".config/opencode/opencode.json")
-  const expandedPath = configPath.replace("~", process.env.HOME || "")
+  const configPath = join(homedir(), ".config/opencode/opencode.json")
+  const expandedPath = configPath.replace("~", homedir())
 
   if (!existsSync(expandedPath)) {
     return { name: "Plugins", status: "warn", message: "Cannot check plugins - no global config" }

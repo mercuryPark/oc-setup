@@ -45,12 +45,16 @@ export function migrateClaudeCode(rootPath: string): string {
 
   const settings = readFileSafe(join(rootPath, ".claude", "settings.json"))
   if (settings) {
-    const parsed = JSON.parse(settings) as ClaudeCodeConfig
-    if (parsed.model) {
-      suggestions.push(`모델 설정 감지됨: ${parsed.model} - opencode.json에 수동으로 추가 필요`)
-    }
-    if (parsed["dangerously-skip-permissions"]) {
-      warnings.push("dangerously-skip-permissions는 OpenCode에서 지원되지 않습니다")
+    try {
+      const parsed = JSON.parse(settings) as ClaudeCodeConfig
+      if (parsed.model) {
+        suggestions.push(`모델 설정 감지됨: ${parsed.model} - opencode.json에 수동으로 추가 필요`)
+      }
+      if (parsed["dangerously-skip-permissions"]) {
+        warnings.push("dangerously-skip-permissions는 OpenCode에서 지원되지 않습니다")
+      }
+    } catch {
+      warnings.push(".claude/settings.json 파싱 실패 - 설정이 손상되었을 수 있습니다")
     }
   }
 
@@ -71,7 +75,7 @@ export function migrateClaudeCode(rootPath: string): string {
       const settingsObj = JSON.parse(settingsData) as ClaudeCodeConfig
       if (settingsObj.model) opencodeConfig.model = settingsObj.model
     } catch {
-      // skip
+      warnings.push(".claude/settings.json 파싱 실패 - 설정이 손상되었을 수 있습니다")
     }
   }
 
