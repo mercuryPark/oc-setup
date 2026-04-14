@@ -38,7 +38,7 @@ export async function runInitWizard(): Promise<void> {
 
   if (previousTool !== "none") {
     console.log(`\n⚠️  ${previousTool}에서 전환하시는군요!`)
-    console.log("   'oc-setup migrate' 명령으로 마이그레이션을 먼저 진행해주세요.\n")
+    console.log("   'opencode-setup migrate' 명령으로 마이그레이션을 먼저 진행해주세요.\n")
     return
   }
 

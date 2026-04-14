@@ -86,7 +86,7 @@ function checkConfig(): CheckResult {
   const expandedPath = configPath.replace("~", process.env.HOME || "")
 
   if (!existsSync(expandedPath)) {
-    return { name: "Global Config", status: "warn", message: "Global opencode.json not found", fix: "Run 'oc-setup init' or configure OpenCode manually" }
+    return { name: "Global Config", status: "warn", message: "Global opencode.json not found", fix: "Run 'opencode-setup init' or configure OpenCode manually" }
   }
 
   try {
@@ -102,7 +102,7 @@ function checkProjectConfig(directory: string): CheckResult {
   const configPath = join(directory, "opencode.json")
 
   if (!existsSync(configPath)) {
-    return { name: "Project Config", status: "warn", message: "No project opencode.json", fix: "Run 'oc-setup init' or create opencode.json in project root" }
+    return { name: "Project Config", status: "warn", message: "No project opencode.json", fix: "Run 'opencode-setup init' or create opencode.json in project root" }
   }
 
   try {
@@ -118,7 +118,7 @@ function checkAgentsMD(directory: string): CheckResult {
   const agentsPath = join(directory, "AGENTS.md")
 
   if (!existsSync(agentsPath)) {
-    return { name: "AGENTS.md", status: "warn", message: "AGENTS.md not found", fix: "Run 'oc-setup init' or create AGENTS.md with project guidelines" }
+    return { name: "AGENTS.md", status: "warn", message: "AGENTS.md not found", fix: "Run 'opencode-setup init' or create AGENTS.md with project guidelines" }
   }
 
   const content = readFileSync(agentsPath, "utf-8")

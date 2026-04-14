@@ -1,27 +1,71 @@
 {
-  "name": "oc-setup",
+  "name": "opencode-setup",
   "version": "0.1.0",
+  "description": "OpenCode 환경 세팅 CLI + Plugin.",
   "type": "module",
-  "main": "dist/index.js",
+  "license": "MIT",
+  "author": "mercuryPark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mercuryPark/oc-setup"
+  },
+  "homepage": "https://github.com/mercuryPark/oc-setup#readme",
+  "bugs": {
+    "url": "https://github.com/mercuryPark/oc-setup/issues"
+  },
+  "keywords": [
+    "opencode", "setup", "cli", "developer-tools",
+    "ai-coding", "claude-code", "cursor", "aider",
+    "configuration", "automation"
+  ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/mercurypark"
+  },
+  "main": "./dist/cli.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./cli": {
+      "import": "./dist/cli.js",
+      "default": "./dist/cli.js"
+    }
+  },
   "bin": {
-    "oc-setup": "dist/cli.js"
+    "opencode-setup": "./dist/cli.js"
+  },
+  "files": ["dist", "templates", "README.md", "LICENSE"],
+  "engines": {
+    "node": ">=18"
   },
   "scripts": {
-    "build": "bun build src/index.ts --outdir dist --target node && bun build src/cli.ts --outdir dist --target node",
-    "build:plugin": "bun build src/index.ts --outdir dist --target node",
-    "build:cli": "bun build src/cli.ts --outdir dist --target node",
+    "build": "tsup src/index.ts src/cli.ts --format esm --outDir dist --target node18 --external @opencode-ai/plugin --external zod --external commander --external @inquirer/prompts --clean && chmod +x dist/cli.js && sed -i '' '1s/^/#!\\/usr\\/bin\\/env node\\n/' dist/cli.js && rm -rf dist/templates && cp -r templates dist/templates",
+    "prepare": "npm run build",
+    "lint": "tsc --noEmit",
     "test": "bun test",
-    "dev": "bun run src/cli.ts"
+    "dev": "tsx src/cli.ts"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@opencode-ai/plugin": {
+      "optional": true
+    }
   },
   "dependencies": {
-    "@opencode-ai/plugin": "latest",
     "zod": "latest",
     "commander": "latest",
     "@inquirer/prompts": "latest"
   },
   "devDependencies": {
     "@types/node": "latest",
-    "typescript": "latest"
-  },
-  "license": "MIT"
+    "typescript": "latest",
+    "tsup": "latest",
+    "tsx": "latest"
+  }
 }

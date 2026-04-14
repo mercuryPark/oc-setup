@@ -1,11 +1,11 @@
-# oc-setup
+# opencode-setup
 
-[![npm version](https://img.shields.io/npm/v/oc-setup?color=cb3837)](https://www.npmjs.com/package/oc-setup)
+[![npm version](https://img.shields.io/npm/v/opencode-setup?color=cb3837)](https://www.npmjs.com/package/opencode-setup)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 > **OpenCode 환경 세팅, 한 번의 실행으로.**
 
-`oc-setup`은 OpenCode의 초기 환경 세팅을 대화형으로 도와주는 **플러그인 겸 CLI 도구**입니다. 모델 선택, 프로젝트 규칙, 커스텀 에이전트, 플러그인, Skill, 권한 설정까지 — 문서를 읽고 직접 JSON을 작성하는 과정을 한 번의 실행으로 대체합니다.
+`opencode-setup`은 OpenCode의 초기 환경 세팅을 대화형으로 도와주는 **플러그인 겸 CLI 도구**입니다. 모델 선택, 프로젝트 규칙, 커스텀 에이전트, 플러그인, Skill, 권한 설정까지 — 문서를 읽고 직접 JSON을 작성하는 과정을 한 번의 실행으로 대체합니다.
 
 [설치](#설치) • [사용법](#사용법) • [CLI 레퍼런스](#cli-레퍼런스) • [설계 문서](./DESIGN.md)
 
@@ -21,7 +21,7 @@ OpenCode는 75개 이상의 Provider와 수십 개의 설정 옵션을 지원합
 - oh-my-opencode는 어떻게 설정하지?
 - Claude Code에서 쓰던 CLAUDE.md, skill, MCP 설정은 어떻게 옮기지?
 
-`oc-setup`은 이 모든 질문에 대해 대화형으로 답을 수집하고, 최적의 설정 파일을 자동 생성합니다.
+`opencode-setup`은 이 모든 질문에 대해 대화형으로 답을 수집하고, 최적의 설정 파일을 자동 생성합니다.
 
 ## 빠른 시작
 
@@ -29,21 +29,21 @@ OpenCode는 75개 이상의 Provider와 수십 개의 설정 옵션을 지원합
 
 ```bash
 # OpenCode 플러그인 (추천)
-npm install oc-setup
+npm install opencode-setup
 
 # 또는 npx로 직접 실행
-npx oc-setup init
+npx opencode-setup init
 ```
 
 ### Step 2: 초기화
 
 ```bash
 # 대화형 위자드 실행
-npx oc-setup init
+npx opencode-setup init
 
 # 또는 프리셋만 적용
-npx oc-setup preset list
-npx oc-setup preset apply frontend-ts
+npx opencode-setup preset list
+npx opencode-setup preset apply frontend-ts
 ```
 
 ### Step 3: 시작
@@ -57,7 +57,7 @@ OpenCode를 재시작하면 바로 작업을 시작할 수 있습니다!
 `opencode.json`에 추가:
 ```json
 {
-  "plugin": ["oc-setup"]
+  "plugin ["opencode-setup"]"]
 }
 ```
 
@@ -66,8 +66,8 @@ OpenCode를 재시작하면 자동 로드됩니다. OpenCode 안에서 AI에게 
 ### 방법 2: 독립 CLI
 
 ```bash
-npm install -g oc-setup
-oc-setup init
+npm install -g opencode-setup
+opencode-setup init
 ```
 
 OpenCode 설정이 아직 없는 신규 사용자도 이 방법으로 바로 시작할 수 있습니다.
@@ -77,7 +77,7 @@ OpenCode 설정이 아직 없는 신규 사용자도 이 방법으로 바로 시
 ### 시나리오 1 — AI 코딩 도구가 처음인 경우
 
 ```bash
-npx oc-setup init
+npx opencode-setup init
 ```
 
 대화형 위자드가 실행됩니다:
@@ -102,12 +102,12 @@ npx oc-setup init
 
 ```bash
 # 프리셋 목록 확인
-npx oc-setup preset list
+npx opencode-setup preset list
 
 # 프리셋 적용
-npx oc-setup preset apply frontend-ts
-npx oc-setup preset apply backend-go
-npx oc-setup preset apply balanced
+npx opencode-setup preset apply frontend-ts
+npx opencode-setup preset apply backend-go
+npx opencode-setup preset apply balanced
 ```
 
 **모델 프리셋:**
@@ -130,7 +130,7 @@ npx oc-setup preset apply balanced
 ### 시나리오 3 — 환경 진단
 
 ```bash
-npx oc-setup doctor
+npx opencode-setup doctor
 ```
 
 OpenCode, Bun, API 키, 설정 파일, LSP 서버, 플러그인 상태를 점검합니다.
@@ -138,7 +138,7 @@ OpenCode, Bun, API 키, 설정 파일, LSP 서버, 플러그인 상태를 점검
 ### 시나리오 4 — 설정 검증
 
 ```bash
-npx oc-setup validate
+npx opencode-setup validate
 ```
 
 opencode.json과 AGENTS.md의 구조와 유효성을 검증합니다.
@@ -147,12 +147,12 @@ opencode.json과 AGENTS.md의 구조와 유효성을 검증합니다.
 
 | CLI | 플러그인 Tool | 설명 |
 |-----|--------------|------|
-| `oc-setup init` | `setup_init` | 대화형 초기 세팅 |
-| `oc-setup preset list` | `setup_preset_list` | 프리셋 목록 |
-| `oc-setup preset apply <name>` | `setup_preset_apply` | 프리셋 적용 |
-| `oc-setup migrate <tool>` | `setup_migrate` | 설정 마이그레이션 (준비 중) |
-| `oc-setup validate` | `setup_validate` | 설정 검증 |
-| `oc-setup doctor` | `setup_doctor` | 환경 진단 |
+| `opencode-setup init` | `setup_init` | 대화형 초기 세팅 |
+| `opencode-setup preset list` | `setup_preset_list` | 프리셋 목록 |
+| `opencode-setup preset apply <name>` | `setup_preset_apply` | 프리셋 적용 |
+| `opencode-setup migrate <tool>` | `setup_migrate` | 설정 마이그레이션 (준비 중) |
+| `opencode-setup validate` | `setup_validate` | 설정 검증 |
+| `opencode-setup doctor` | `setup_doctor` | 환경 진단 |
 
 ## 생성되는 파일
 
@@ -214,7 +214,7 @@ opencode.json과 AGENTS.md의 구조와 유효성을 검증합니다.
 ```bash
 #克隆
 git clone https://github.com/mercuryPark/oc-setup.git
-cd oc-setup
+cd opencode-setup
 
 # 의존성 설치
 bun install

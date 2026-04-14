@@ -1,0 +1,10 @@
+=== T0 QA Results ===
+Missing fields: NONE - ALL OK
+Total fields: 23
+Package name: opencode-setup
+Node engines: >=18
+Has exports: true
+Has peerDeps: true
+Has .npmignore: true
+Has tsup: true
+Has tsx: true

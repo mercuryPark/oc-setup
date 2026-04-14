@@ -3,7 +3,7 @@ import { join, dirname } from "path"
 import { fileURLToPath } from "url"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const TEMPLATES_DIR = join(__dirname, "../../templates/agents")
+const TEMPLATES_DIR = join(__dirname, "templates/agents")
 
 const DEFAULT_AGENTS = ["reviewer.md", "tester.md", "planner.md"]
 

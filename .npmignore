@@ -1,0 +1,28 @@
+# Source code (publish only built output)
+src/
+test/
+fixtures/
+*.ts
+!*.d.ts
+tsconfig.json
+vitest.config.*
+
+# Development
+.github/
+.vscode/
+.idea/
+.git*
+.sisyphus/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Misc
+bun.lock
+bun.lockb
+coverage/

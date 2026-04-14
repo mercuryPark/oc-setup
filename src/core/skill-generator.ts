@@ -4,7 +4,7 @@ import { fileURLToPath } from "url"
 import type { UserProfile } from "../types"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const TEMPLATES_DIR = join(__dirname, "../../templates/skills")
+const TEMPLATES_DIR = join(__dirname, "templates/skills")
 
 const BASE_SKILLS = ["code-review", "testing"]
 const FRONTEND_SKILL = "frontend-design"

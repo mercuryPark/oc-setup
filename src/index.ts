@@ -5,7 +5,12 @@ import { setupMigrate } from "./tools/setup-migrate"
 import { setupValidate } from "./tools/setup-validate"
 import { setupDoctor } from "./tools/setup-doctor"
 
-export const OcSetupPlugin: Plugin = async () => {
+export const OcSetupPlugin: Plugin = async (ctx) => {
+  // ctx.directory - current project directory
+  // ctx.$ - BunShell for shell commands
+  // ctx.client - OpenCode SDK client
+  // ctx.worktree - git worktree path
+  void ctx // suppress unused warning
   return {
     tool: {
       setup_init: setupInit,

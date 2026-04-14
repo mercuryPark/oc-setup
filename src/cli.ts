@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { Command } from "commander"
 import { runInitWizard } from "./prompt/wizard"
 import { listPresets, applyPreset } from "./preset/registry"
@@ -9,7 +8,7 @@ import { formatReport } from "./doctor/reporter"
 const program = new Command()
 
 program
-  .name("oc-setup")
+  .name("opencode-setup")
   .description("OpenCode 초기 환경 세팅 도구")
   .version("0.1.0")
 
@@ -58,3 +57,19 @@ program
   })
 
 program.parse()
+
+// Exit code handling
+process.on('SIGINT', () => {
+  console.log('\nCancelled by user')
+  process.exit(130)
+})
+
+process.on('uncaughtException', (error) => {
+  console.error(`Fatal error: ${error.message}`)
+  process.exit(1)
+})
+
+process.on('unhandledRejection', (reason) => {
+  console.error(`Unhandled rejection: ${reason}`)
+  process.exit(1)
+})
