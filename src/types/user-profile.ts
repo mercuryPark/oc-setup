@@ -11,6 +11,39 @@ export interface MCPServerChoice {
   config: Record<string, unknown>
 }
 
+/**
+ * OMO (oh-my-opencode) 에이전트 설정
+ */
+export interface OMOAgentConfig {
+  model: string
+  variant?: "low" | "medium" | "high" | "xhigh"
+}
+
+/**
+ * OMO (oh-my-opencode) 카테고리 설정
+ */
+export interface OMOCategoryConfig {
+  model: string
+  variant?: "low" | "medium" | "high" | "xhigh"
+}
+
+/**
+ * OMO (oh-my-opencode) 전체 설정
+ * 키는 kebab-case로 저장됨 (e.g., "frontend-ui-ux-engineer")
+ */
+export interface OMOConfig {
+  agents: Record<string, OMOAgentConfig | undefined>
+  categories: Record<string, OMOCategoryConfig | undefined>
+}
+
+/**
+ * OMO 사용 여부 및 설정 선택
+ */
+export interface OMOProfile {
+  enabled: boolean
+  config?: OMOConfig
+}
+
 export interface UserProfile {
   experienceLevel: ExperienceLevel
   previousTool: PreviousTool
@@ -25,4 +58,5 @@ export interface UserProfile {
   plugins: string[]
   permissionLevel: PermissionLevel
   migrationSource?: MigrationSource
+  omo?: OMOProfile
 }

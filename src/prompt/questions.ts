@@ -1,5 +1,5 @@
 import { select, checkbox, input, confirm } from "@inquirer/prompts"
-import type { ExperienceLevel, PreviousTool, BudgetTier, ProjectScale, PermissionLevel, MCPServerChoice } from "../types"
+import type { ExperienceLevel, PreviousTool, BudgetTier, ProjectScale, PermissionLevel, MCPServerChoice, OMOProfile, OMOConfig } from "../types"
 
 export async function askExperience(): Promise<ExperienceLevel> {
   const answer = await select({
@@ -185,4 +185,126 @@ export async function askConfirmGeneration(files: string[]): Promise<boolean> {
     default: true,
   })
   return answer
+}
+
+/**
+ * OMO (oh-my-opencode) 사용 여부 및 설정 선택
+ */
+export async function askOMO(budget: BudgetTier, plugins: string[]): Promise<OMOProfile> {
+  // oh-my-opencode 플러그인 선택 여부 확인
+  const hasOMOPlugin = plugins.includes("oh-my-opencode")
+
+  if (hasOMOPlugin) {
+    // 플러그인을 선택한 경우에도 OMO 설정 활성화 여부를 물어봄
+    const enableOMO = await confirm({
+      message: "oh-my-opencode 플러그인을 선택하셨습니다. OMO 에이전트 설정을 활성화하시겠습니까?",
+      default: true,
+    })
+
+    if (!enableOMO) {
+      return { enabled: false }
+    }
+  } else {
+    // 플러그인을 선택하지 않은 경우 OMO 사용 여부 먼저 확인
+    const enableOMO = await confirm({
+      message: "oh-my-opencode (멀티 에이전트 오케스트레이션)를 사용하시겠습니까?",
+      default: false,
+    })
+
+    if (!enableOMO) {
+      return { enabled: false }
+    }
+  }
+
+  console.log("\n🤖 OMO 에이전트 설정")
+  console.log("   예산에 따라 최적의 에이전트 모델 조합을 추천합니다.\n")
+
+  // 예산별 OMO 설정 생성
+  const omoConfig = generateOMOConfigByBudget(budget)
+
+  return {
+    enabled: true,
+    config: omoConfig,
+  }
+}
+
+/**
+ * 예산별 OMO 설정 생성
+ * 모든 키는 kebab-case로 반환
+ */
+function generateOMOConfigByBudget(budget: BudgetTier): OMOConfig {
+  switch (budget) {
+    case "free":
+    case "low":
+      return {
+        agents: {
+          sisyphus: { model: "opencode-go/kimi-k2.5" },
+          prometheus: { model: "opencode-go/glm-5" },
+          atlas: { model: "opencode-go/kimi-k2.5" },
+          explore: { model: "opencode-go/minimax-m2.7" },
+          librarian: { model: "opencode-go/minimax-m2.5" },
+          "multimodal-looker": { model: "opencode-go/kimi-k2.5" },
+          "frontend-ui-ux-engineer": { model: "opencode-go/gemini-2.5-pro", variant: "low" },
+          "document-writer": { model: "opencode-go/gemini-2.5-pro", variant: "low" },
+        },
+        categories: {
+          explore: { model: "opencode-go/minimax-m2.7" },
+          quick: { model: "opencode-go/minimax-m2.7" },
+          deep: { model: "opencode-go/glm-5.1" },
+          "unspecified-low": { model: "opencode-go/kimi-k2.5" },
+          "unspecified-high": { model: "opencode-go/glm-5.1" },
+          ultrabrain: { model: "opencode-go/glm-5.1", variant: "high" },
+          oracle: { model: "opencode-go/glm-5.1", variant: "high" },
+        },
+      }
+
+    case "mid":
+      return {
+        agents: {
+          sisyphus: { model: "anthropic/claude-opus-4-5" },
+          hephaestus: { model: "openai/gpt-5.4", variant: "medium" },
+          prometheus: { model: "openai/gpt-5.4" },
+          atlas: { model: "kimi-for-coding/k2p5" },
+          explore: { model: "opencode-go/minimax-m2.7" },
+          librarian: { model: "opencode-go/minimax-m2.5" },
+          "multimodal-looker": { model: "opencode-go/kimi-k2.5" },
+          "frontend-ui-ux-engineer": { model: "google/antigravity-gemini-3-pro", variant: "low" },
+          "document-writer": { model: "google/antigravity-gemini-3-pro", variant: "low" },
+        },
+        categories: {
+          explore: { model: "opencode-go/minimax-m2.7" },
+          quick: { model: "opencode-go/minimax-m2.7" },
+          deep: { model: "openai/gpt-5.3-codex", variant: "high" },
+          "unspecified-low": { model: "anthropic/claude-sonnet-4-6" },
+          "unspecified-high": { model: "anthropic/claude-opus-4-6" },
+          ultrabrain: { model: "openai/gpt-5.4", variant: "xhigh" },
+          oracle: { model: "openai/gpt-5.4", variant: "xhigh" },
+        },
+      }
+
+    case "high":
+    default:
+      return {
+        agents: {
+          sisyphus: { model: "anthropic/claude-opus-4-6" },
+          hephaestus: { model: "openai/gpt-5.4", variant: "medium" },
+          prometheus: { model: "openai/gpt-5.4" },
+          atlas: { model: "anthropic/claude-sonnet-4-5" },
+          explore: { model: "kimi-for-coding/k2p5" },
+          librarian: { model: "google/gemini-2.5-flash" },
+          "multimodal-looker": { model: "opencode-go/kimi-k2.5" },
+          "frontend-ui-ux-engineer": { model: "google/antigravity-gemini-3-pro", variant: "low" },
+          "document-writer": { model: "google/antigravity-gemini-3-pro", variant: "low" },
+        },
+        categories: {
+          explore: { model: "venice/minimax-m2.7" },
+          quick: { model: "venice/minimax-m2.7" },
+          deep: { model: "openai/gpt-5.3-codex", variant: "high" },
+          "unspecified-low": { model: "anthropic/claude-sonnet-4-6" },
+          "unspecified-high": { model: "anthropic/claude-opus-4-6" },
+          ultrabrain: { model: "openai/gpt-5.4", variant: "xhigh" },
+          oracle: { model: "openai/gpt-5.4", variant: "xhigh" },
+        },
+      }
+  }
 }

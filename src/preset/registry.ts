@@ -33,6 +33,12 @@ export interface StackPreset {
   }
 }
 
+export interface OMOPreset {
+  name: string
+  description: string
+  configPath: string
+}
+
 export interface ApplyResult {
   success: boolean
   files: string[]
@@ -128,11 +134,28 @@ export const STACK_PRESETS: StackPreset[] = [
 ]
 
 // ============================================================
+// OMO Presets
+// ============================================================
+
+export const OMO_PRESETS: OMOPreset[] = [
+  {
+    name: "omo-free",
+    description: "OpenCode Go 묣로 모델 기반 OMO 설정",
+    configPath: "omo/free.json",
+  },
+  {
+    name: "omo-premium",
+    description: "고성능 유료 모델 기반 OMO 설정",
+    configPath: "omo/premium.json",
+  },
+]
+
+// ============================================================
 // Registry Functions
 // ============================================================
 
 /**
- * List all presets (model + stack) in table format
+ * List all presets (model + stack + omo) in table format
  */
 export function listPresets(): string {
   const lines: string[] = ["# Available Presets\n"]
@@ -156,6 +179,16 @@ export function listPresets(): string {
     lines.push(`| \`${preset.name}\` | ${preset.description} |`)
   }
 
+  // OMO Presets
+  lines.push("")
+  lines.push("## OMO Presets")
+  lines.push("")
+  lines.push("| Name | Description |")
+  lines.push("|------|-------------|")
+  for (const preset of OMO_PRESETS) {
+    lines.push(`| \`${preset.name}\` | ${preset.description} |`)
+  }
+
   return lines.join("\n")
 }
 
@@ -171,6 +204,13 @@ export function getModelPreset(name: string): ModelPreset | undefined {
  */
 export function getStackPreset(name: string): StackPreset | undefined {
   return STACK_PRESETS.find((p) => p.name === name)
+}
+
+/**
+ * Get OMO preset by name
+ */
+export function getOMOPreset(name: string): OMOPreset | undefined {
+  return OMO_PRESETS.find((p) => p.name === name)
 }
 
 /**
@@ -278,6 +318,46 @@ export async function applyPreset(
     const modelResult = await applyPreset(stackPreset.modelPreset, projectDir, options)
     files.push(...modelResult.files)
     warnings.push(...modelResult.warnings)
+
+    return { success: true, files, warnings }
+  }
+
+  // Check if it's an OMO preset
+  const omoPreset = getOMOPreset(name)
+  if (omoPreset) {
+    const { homedir } = await import("os")
+    const homeDir = homedir()
+    const configDir = join(homeDir, ".config/opencode")
+    const omoConfigPath = join(configDir, "oh-my-opencode.json")
+
+    if (!existsSync(configDir)) {
+      mkdirSync(configDir, { recursive: true })
+    }
+
+    const src = join(TEMPLATES_DIR, omoPreset.configPath)
+    if (existsSync(src)) {
+      cpSync(src, omoConfigPath)
+      files.push(omoConfigPath)
+    } else {
+      warnings.push(`OMO template not found: ${src}`)
+    }
+
+    // OMO 프리셋 적용 시 opencode.json에 플러그인 자동 추가
+    const opencodeConfigPath = join(projectDir, "opencode.json")
+    if (existsSync(opencodeConfigPath)) {
+      try {
+        const opencodeConfig = JSON.parse(readFileSync(opencodeConfigPath, "utf-8")) as { plugin?: string[] }
+        const plugins = opencodeConfig.plugin || []
+        if (!plugins.includes("oh-my-opencode")) {
+          plugins.push("oh-my-opencode")
+          opencodeConfig.plugin = plugins
+          writeFileSync(opencodeConfigPath, JSON.stringify(opencodeConfig, null, 2) + "\n")
+          files.push(opencodeConfigPath)
+        }
+      } catch {
+        warnings.push(`Could not update opencode.json with oh-my-opencode plugin`)
+      }
+    }
 
     return { success: true, files, warnings }
   }

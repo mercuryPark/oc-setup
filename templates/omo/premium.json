@@ -1,0 +1,60 @@
+{
+  "agents": {
+    "sisyphus": {
+      "model": "anthropic/claude-opus-4-6"
+    },
+    "hephaestus": {
+      "model": "openai/gpt-5.4",
+      "variant": "medium"
+    },
+    "prometheus": {
+      "model": "openai/gpt-5.4"
+    },
+    "atlas": {
+      "model": "anthropic/claude-sonnet-4-5"
+    },
+    "explore": {
+      "model": "kimi-for-coding/k2p5"
+    },
+    "librarian": {
+      "model": "google/gemini-2.5-flash"
+    },
+    "multimodal-looker": {
+      "model": "opencode-go/kimi-k2.5"
+    },
+    "frontend-ui-ux-engineer": {
+      "model": "google/antigravity-gemini-3-pro",
+      "variant": "low"
+    },
+    "document-writer": {
+      "model": "google/antigravity-gemini-3-pro",
+      "variant": "low"
+    }
+  },
+  "categories": {
+    "explore": {
+      "model": "venice/minimax-m2.7"
+    },
+    "quick": {
+      "model": "venice/minimax-m2.7"
+    },
+    "deep": {
+      "model": "openai/gpt-5.3-codex",
+      "variant": "high"
+    },
+    "unspecified-low": {
+      "model": "anthropic/claude-sonnet-4-6"
+    },
+    "unspecified-high": {
+      "model": "anthropic/claude-opus-4-6"
+    },
+    "ultrabrain": {
+      "model": "openai/gpt-5.4",
+      "variant": "xhigh"
+    },
+    "oracle": {
+      "model": "openai/gpt-5.4",
+      "variant": "xhigh"
+    }
+  }
+}

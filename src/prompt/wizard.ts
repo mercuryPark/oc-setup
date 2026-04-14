@@ -1,4 +1,5 @@
 import { homedir } from "os"
+import { join } from "path"
 import {
   askExperience,
   askPreviousTool,
@@ -13,6 +14,7 @@ import {
   askPlugins,
   askPermissionLevel,
   askConfirmGeneration,
+  askOMO,
 } from "./questions.js"
 import type { UserProfile } from "../types"
 import { writeGlobalConfig, writeProjectConfig } from "../core/config-generator.js"
@@ -21,6 +23,7 @@ import { generateCommands, writeCommands } from "../core/command-generator.js"
 import { generateAgents, writeAgents } from "../core/agent-generator.js"
 import { generateSkills, writeSkills } from "../core/skill-generator.js"
 import { generateEnvExample, writeEnvExample } from "../core/env-generator.js"
+import { writeOMOConfig } from "../core/omo-generator.js"
 
 function getProjectDir(): string {
   return process.cwd()
@@ -61,6 +64,9 @@ export async function runInitWizard(): Promise<void> {
   console.log("\n🔧 플러그인")
   const plugins = await askPlugins()
 
+  console.log("\n🤖 oh-my-opencode (OMO) 설정")
+  const omo = await askOMO(budget, plugins)
+
   console.log("\n🔒 권한 설정")
   const permissionLevel = await askPermissionLevel()
 
@@ -77,19 +83,21 @@ export async function runInitWizard(): Promise<void> {
     mcpServers,
     plugins,
     permissionLevel,
+    omo,
   }
 
   const projectDir = getProjectDir()
   const homeDir = getHomeDir()
 
   const filesToCreate = [
-    `${homeDir}/.config/opencode/opencode.json (글로벌 설정)`,
+    `${join(homeDir, ".config/opencode/opencode.json")} (글로벌 설정)`,
     `${projectDir}/opencode.json (프로젝트 설정)`,
     `${projectDir}/AGENTS.md (프로젝트 가이드)`,
     `${projectDir}/.opencode/commands/ (커스텀 커맨드)`,
     `${projectDir}/.opencode/agents/ (커스텀 에이전트)`,
     `${projectDir}/.opencode/skills/ (스킬)`,
     `${projectDir}/.env.example (환경변수 템플릿)`,
+    ...(omo?.enabled ? [`${join(homeDir, ".config/opencode/oh-my-opencode.json")} (OMO 설정)`] : []),
   ]
 
   const confirmed = await askConfirmGeneration(filesToCreate)
@@ -126,6 +134,11 @@ export async function runInitWizard(): Promise<void> {
     const envContent = generateEnvExample(profile)
     writeEnvExample(envContent, projectDir)
     console.log("   ✓ .env.example 생성됨")
+
+    if (omo?.enabled) {
+      writeOMOConfig(omo, homeDir)
+      console.log("   ✓ oh-my-opencode 설정 생성됨")
+    }
 
     console.log("\n✅ 생성 완료!\n")
     console.log("다음 단계:")

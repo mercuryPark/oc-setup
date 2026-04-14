@@ -1,0 +1,55 @@
+{
+  "agents": {
+    "sisyphus": {
+      "model": "opencode-go/kimi-k2.5"
+    },
+    "prometheus": {
+      "model": "opencode-go/glm-5"
+    },
+    "atlas": {
+      "model": "opencode-go/kimi-k2.5"
+    },
+    "explore": {
+      "model": "opencode-go/minimax-m2.7"
+    },
+    "librarian": {
+      "model": "opencode-go/minimax-m2.5"
+    },
+    "multimodal-looker": {
+      "model": "opencode-go/kimi-k2.5"
+    },
+    "frontend-ui-ux-engineer": {
+      "model": "opencode-go/gemini-2.5-pro",
+      "variant": "low"
+    },
+    "document-writer": {
+      "model": "opencode-go/gemini-2.5-pro",
+      "variant": "low"
+    }
+  },
+  "categories": {
+    "explore": {
+      "model": "opencode-go/minimax-m2.7"
+    },
+    "quick": {
+      "model": "opencode-go/minimax-m2.7"
+    },
+    "deep": {
+      "model": "opencode-go/glm-5.1"
+    },
+    "unspecified-low": {
+      "model": "opencode-go/kimi-k2.5"
+    },
+    "unspecified-high": {
+      "model": "opencode-go/glm-5.1"
+    },
+    "ultrabrain": {
+      "model": "opencode-go/glm-5.1",
+      "variant": "high"
+    },
+    "oracle": {
+      "model": "opencode-go/glm-5.1",
+      "variant": "high"
+    }
+  }
+}
