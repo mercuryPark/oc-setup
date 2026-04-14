@@ -23,7 +23,8 @@ export async function runValidation(directory: string): Promise<string> {
       }
 
       if (config.model) {
-        const modelPattern = /^[a-z0-9-]+\/[a-z0-9-]+$/i
+        // Allow provider/model format with letters, numbers, dots, underscores, hyphens
+        const modelPattern = /^[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+$/
         if (!modelPattern.test(config.model)) {
           errors.push({ type: "error", file: "~/.config/opencode/opencode.json", message: `Invalid model format: '${config.model}'. Expected 'provider/model'` })
         }
