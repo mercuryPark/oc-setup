@@ -4,6 +4,7 @@ import { listPresets, applyPreset } from "./preset/registry.js"
 import { runValidation } from "./validator/config-validator.js"
 import { runAllChecks } from "./doctor/checks.js"
 import { formatReport } from "./doctor/reporter.js"
+import { runMigration, autoMigrate } from "./migrate/index.js"
 
 const program = new Command()
 
@@ -33,11 +34,17 @@ preset
   })
 
 program
-  .command("migrate <tool>")
-  .description("기존 도구 마이그레이션 (claude-code, cursor, aider)")
-  .action((tool: string) => {
-    console.log(`마이그레이션 기능은 준비 중입니다: ${tool}`)
-    console.log("현재 지원: claude-code, cursor, aider")
+  .command("migrate [tool]")
+  .description("기존 도구 마이그레이션 (claude-code, cursor, aider). 도구 미지정 시 자동 감지")
+  .action(async (tool: string | undefined) => {
+    const projectDir = process.cwd()
+    if (!tool) {
+      console.log("🔍 자동 감지 중...")
+      console.log(autoMigrate(projectDir))
+      return
+    }
+    const result = await runMigration(tool as "claude-code" | "cursor" | "aider", projectDir)
+    console.log(result)
   })
 
 program
