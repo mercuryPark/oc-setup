@@ -1,5 +1,5 @@
 import { tool } from "@opencode-ai/plugin"
-import { listPresets, applyPreset } from "../preset/registry"
+import { listPresets, applyPreset } from "../preset/registry.js"
 
 const { schema } = tool
 

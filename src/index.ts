@@ -1,9 +1,9 @@
 import type { Plugin } from "@opencode-ai/plugin"
-import { setupInit } from "./tools/setup-init"
-import { setupPresetList, setupPresetApply } from "./tools/setup-preset"
-import { setupMigrate } from "./tools/setup-migrate"
-import { setupValidate } from "./tools/setup-validate"
-import { setupDoctor } from "./tools/setup-doctor"
+import { setupInit } from "./tools/setup-init.js"
+import { setupPresetList, setupPresetApply } from "./tools/setup-preset.js"
+import { setupMigrate } from "./tools/setup-migrate.js"
+import { setupValidate } from "./tools/setup-validate.js"
+import { setupDoctor } from "./tools/setup-doctor.js"
 
 export const OcSetupPlugin: Plugin = async (ctx) => {
   // ctx.directory - current project directory

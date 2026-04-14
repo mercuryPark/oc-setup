@@ -1,12 +1,12 @@
 import { tool } from "@opencode-ai/plugin"
 import { homedir } from "os"
 import type { UserProfile } from "../types"
-import { writeGlobalConfig, writeProjectConfig } from "../core/config-generator"
-import { generateAgentsMD, writeAgentsMD } from "../core/agents-md-generator"
-import { generateCommands, writeCommands } from "../core/command-generator"
-import { generateAgents, writeAgents } from "../core/agent-generator"
-import { generateSkills, writeSkills } from "../core/skill-generator"
-import { generateEnvExample, writeEnvExample } from "../core/env-generator"
+import { writeGlobalConfig, writeProjectConfig } from "../core/config-generator.js"
+import { generateAgentsMD, writeAgentsMD } from "../core/agents-md-generator.js"
+import { generateCommands, writeCommands } from "../core/command-generator.js"
+import { generateAgents, writeAgents } from "../core/agent-generator.js"
+import { generateSkills, writeSkills } from "../core/skill-generator.js"
+import { generateEnvExample, writeEnvExample } from "../core/env-generator.js"
 
 const { schema } = tool
 

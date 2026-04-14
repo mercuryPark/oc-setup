@@ -1,4 +1,4 @@
-import type { CheckResult } from "./checks"
+import type { CheckResult } from "./checks.js"
 
 export function formatReport(results: CheckResult[]): string {
   const lines: string[] = ["🩺 Environment Diagnosis\n"]

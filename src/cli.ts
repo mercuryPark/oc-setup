@@ -1,9 +1,9 @@
 import { Command } from "commander"
-import { runInitWizard } from "./prompt/wizard"
-import { listPresets, applyPreset } from "./preset/registry"
-import { runValidation } from "./validator/config-validator"
-import { runAllChecks } from "./doctor/checks"
-import { formatReport } from "./doctor/reporter"
+import { runInitWizard } from "./prompt/wizard.js"
+import { listPresets, applyPreset } from "./preset/registry.js"
+import { runValidation } from "./validator/config-validator.js"
+import { runAllChecks } from "./doctor/checks.js"
+import { formatReport } from "./doctor/reporter.js"
 
 const program = new Command()
 
