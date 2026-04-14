@@ -58,8 +58,8 @@
     "build": "tsup src/index.ts src/cli.ts --format esm --outDir dist --target node18 --external @opencode-ai/plugin --external zod --external commander --external @inquirer/prompts --clean && chmod +x dist/cli.js && sed -i '' '1s/^/#!\\/usr\\/bin\\/env node\\n/' dist/cli.js && rm -rf dist/templates && cp -r templates dist/templates",
     "prepare": "npm run build",
     "lint": "tsc --noEmit",
-    "test": "vitest run",
-    "dev": "tsx src/cli.ts"
+    "test": "bun test",
+    "dev": "bun src/cli.ts"
   },
   "peerDependencies": {
     "@opencode-ai/plugin": "^1.0.0"
@@ -78,7 +78,6 @@
     "@types/node": "latest",
     "tsup": "latest",
     "tsx": "latest",
-    "typescript": "latest",
-    "vitest": "^4.1.4"
+    "typescript": "latest"
   }
 }
