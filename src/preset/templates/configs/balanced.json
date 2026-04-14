@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "anthropic/claude-sonnet-4-5",
+  "agent": {
+    "build": { "model": "anthropic/claude-sonnet-4-5" },
+    "plan": { "model": "google/gemini-2.5-flash" }
+  },
+  "theme": "opencode",
+  "autoupdate": true
+}

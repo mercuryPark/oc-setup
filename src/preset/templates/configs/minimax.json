@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "minimax/minimax-m2.5",
+  "agent": {
+    "build": { "model": "minimax/minimax-m2.5" },
+    "plan": { "model": "opencode/big-pickle" }
+  },
+  "theme": "opencode",
+  "autoupdate": true
+}
