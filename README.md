@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@hoyeon0722/opencode-setup?color=cb3837)](https://www.npmjs.com/package/@hoyeon0722/opencode-setup)
 [![npm downloads](https://img.shields.io/npm/dm/@hoyeon0722/opencode-setup)](https://www.npmjs.com/package/@hoyeon0722/opencode-setup)
 [![CI](https://github.com/mercuryPark/oc-setup/actions/workflows/ci.yml/badge.svg)](https://github.com/mercuryPark/oc-setup/actions/workflows/ci.yml)
+[![coverage](https://codecov.io/gh/mercuryPark/oc-setup/branch/master/graph/badge.svg)](https://codecov.io/gh/mercuryPark/oc-setup)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![install size](https://packagephobia.com/badge?p=@hoyeon0722/opencode-setup)](https://packagephobia.com/result?p=@hoyeon0722/opencode-setup)
 
