@@ -1,6 +1,6 @@
-# opencode-setup
+# @hoeyon0722/opencode-setup
 
-[![npm version](https://img.shields.io/npm/v/opencode-setup?color=cb3837)](https://www.npmjs.com/package/opencode-setup)
+[![npm version](https://img.shields.io/npm/v/@hoeyon0722/opencode-setup?color=cb3837)](https://www.npmjs.com/package/@hoeyon0722/opencode-setup)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 > **OpenCode 환경 세팅, 한 번의 실행으로.**
@@ -37,10 +37,10 @@ OpenCode는 75개 이상의 Provider와 수십 개의 설정 옵션을 지원합
 
 ```bash
 # OpenCode 플러그인 (추천)
-npm install opencode-setup
+npm install @hoeyon0722/opencode-setup
 
 # 또는 npx로 직접 실행
-npx opencode-setup init
+npx @hoeyon0722/opencode-setup init
 ```
 
 ### Step 2: 초기화
@@ -77,10 +77,10 @@ OpenCode를 재시작하면 자동 로드됩니다. OpenCode 안에서 AI에게 
 
 ```bash
 # 권장: npx로 실행 (설치 불필요)
-npx oc-setup init
+npx @hoeyon0722/opencode-setup init
 
 # 전역 설치 시 (권장하지 않음)
-npm install -g opencode-setup
+npm install -g @hoeyon0722/opencode-setup
 oc-setup init
 ```
 
@@ -91,7 +91,7 @@ OpenCode 설정이 아직 없는 신규 사용자도 이 방법으로 바로 시
 ### 시나리오 1 — AI 코딩 도구가 처음인 경우
 
 ```bash
-npx oc-setup init
+npx @hoeyon0722/opencode-setup init
 ```
 
 대화형 위자드가 실행됩니다:

@@ -9,7 +9,7 @@ import { runMigration, autoMigrate } from "./migrate/index.js"
 const program = new Command()
 
 program
-  .name("opencode-setup")
+  .name("@hoeyon0722/opencode-setup")
   .description("OpenCode 초기 환경 세팅 도구")
   .version("0.1.0")
 

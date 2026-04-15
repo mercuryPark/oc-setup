@@ -1,0 +1,152 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1776143350581,
+  "projectRoot": "/Users/hoyeon/Documents/SideProject/oc-setup",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": ">=18",
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [],
+    "packageManager": "npm",
+    "runtime": "Node.js 18"
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": "npm test",
+    "lintCommand": "npm run lint",
+    "devCommand": "npm run dev",
+    "scripts": {
+      "build": "tsup src/index.ts src/cli.ts --format esm --outDir dist --target node18 --external @opencode-ai/plugin --external zod --external commander --external @inquirer/prompts --clean && tsc --emitDeclarationOnly && chmod +x dist/cli.js && sed -i '' '1s/^/#!\\/usr\\/bin\\/env node\\n/' dist/cli.js && rm -rf dist/templates && cp -r templates dist/templates",
+      "prepare": "npm run build",
+      "lint": "tsc --noEmit",
+      "test": "bun test",
+      "dev": "bun src/cli.ts"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": "ES modules",
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "src",
+      "test"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "dist": {
+      "path": "dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 5,
+      "lastAccessed": 1776143350565,
+      "keyFiles": [
+        "chunk-FTV7ABVP.js",
+        "cli.d.ts",
+        "cli.js",
+        "index.d.ts",
+        "index.js"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 2,
+      "lastAccessed": 1776143350566,
+      "keyFiles": [
+        "cli.ts",
+        "index.ts"
+      ]
+    },
+    "templates": {
+      "path": "templates",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1776143350570,
+      "keyFiles": []
+    },
+    "test": {
+      "path": "test",
+      "purpose": "Test files",
+      "fileCount": 0,
+      "lastAccessed": 1776143350574,
+      "keyFiles": []
+    },
+    "test-temp": {
+      "path": "test-temp",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1776143350574,
+      "keyFiles": []
+    },
+    "src/types": {
+      "path": "src/types",
+      "purpose": "Type definitions",
+      "fileCount": 4,
+      "lastAccessed": 1776143350577,
+      "keyFiles": [
+        "index.ts",
+        "migration.ts",
+        "opencode-config.ts"
+      ]
+    },
+    "test/fixtures": {
+      "path": "test/fixtures",
+      "purpose": "Test fixtures",
+      "fileCount": 7,
+      "lastAccessed": 1776143350578,
+      "keyFiles": [
+        "AGENTS.md",
+        "AGENTS.md.bak",
+        "CLAUDE.md"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "package.json",
+      "accessCount": 2,
+      "lastAccessed": 1776145856262,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 1,
+      "lastAccessed": 1776145859124,
+      "type": "file"
+    },
+    {
+      "path": "tsconfig.json",
+      "accessCount": 1,
+      "lastAccessed": 1776145862140,
+      "type": "file"
+    },
+    {
+      "path": "AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1776145865064,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
