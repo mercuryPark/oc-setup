@@ -2,6 +2,7 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync, cpSync } from "fs"
 import { join, dirname } from "path"
 import { fileURLToPath } from "url"
 import type { UserProfile } from "../types"
+import { getFeatureConfig } from "./feature-presets.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const TEMPLATES_DIR = join(__dirname, "templates/skills")
@@ -20,6 +21,13 @@ export function generateSkills(profile: UserProfile): Record<string, string> {
   const skillDirs = [...BASE_SKILLS]
   if (isFrontend) {
     skillDirs.push(FRONTEND_SKILL)
+  }
+
+  const featureConfig = getFeatureConfig(profile.featureType)
+  for (const skill of featureConfig.additionalSkills) {
+    if (!skillDirs.includes(skill)) {
+      skillDirs.push(skill)
+    }
   }
 
   for (const skill of skillDirs) {

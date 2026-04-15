@@ -1,5 +1,6 @@
 import { select, checkbox, input, confirm } from "@inquirer/prompts"
-import type { ExperienceLevel, PreviousTool, BudgetTier, ProjectScale, PermissionLevel, MCPServerChoice, OMOProfile, OMOConfig } from "../types"
+import type { ExperienceLevel, PreviousTool, BudgetTier, ProjectScale, PermissionLevel, MCPServerChoice, OMOProfile, OMOConfig, FeatureType } from "../types"
+import { getAllFeatureTypes } from "../core/feature-presets.js"
 
 export async function askExperience(): Promise<ExperienceLevel> {
   const answer = await select({
@@ -77,6 +78,18 @@ export async function askProjectFramework(): Promise<string> {
   const answer = await input({
     message: "프레임워크/라이브러리를 입력해주세요 (예: nextjs, react, fastapi, gin)",
     default: "nextjs",
+  })
+  return answer
+}
+
+export async function askFeatureType(): Promise<FeatureType> {
+  const featureTypes = getAllFeatureTypes()
+  const answer = await select<FeatureType>({
+    message: "어떤 종류의 프로젝트를 개발하시겠습니까?",
+    choices: featureTypes.map((ft) => ({
+      name: `${ft.name} - ${ft.description}`,
+      value: ft.value,
+    })),
   })
   return answer
 }
@@ -171,6 +184,45 @@ export async function askPermissionLevel(): Promise<PermissionLevel> {
     ],
   })
   return answer as PermissionLevel
+}
+
+export interface AdvancedSettings {
+  temperature?: number
+  maxTokens?: number
+  reasoningEffort?: "low" | "medium" | "high"
+}
+
+export async function askAdvancedSettings(): Promise<AdvancedSettings> {
+  const enableAdvanced = await confirm({
+    message: "고급 설정을 구성하시겠습니까? (Temperature, Max Tokens 등)",
+    default: false,
+  })
+
+  if (!enableAdvanced) {
+    return {}
+  }
+
+  console.log("\n🎛️ 고급 설정")
+
+  const temperatureStr = await input({
+    message: "Temperature (0.0 ~ 2.0, 낮을수록 일관적, 높을수록 창의적):",
+    default: "0.7",
+  })
+
+  const reasoningEffort = await select<"low" | "medium" | "high">({
+    message: "AI 사고 깊이 (Reasoning Effort):",
+    choices: [
+      { name: "낮음 - 빠른 응답", value: "low" },
+      { name: "중간 - 균형 (기본)", value: "medium" },
+      { name: "높음 - 깊은 분석", value: "high" },
+    ],
+    default: "medium",
+  })
+
+  return {
+    temperature: parseFloat(temperatureStr),
+    reasoningEffort,
+  }
 }
 
 export async function askConfirmGeneration(files: string[]): Promise<boolean> {

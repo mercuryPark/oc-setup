@@ -1,6 +1,6 @@
 {
   "name": "opencode-setup",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "OpenCode 환경 세팅 CLI + Plugin.",
   "type": "module",
   "license": "MIT",
@@ -43,7 +43,7 @@
     }
   },
   "bin": {
-    "opencode-setup": "./dist/cli.js"
+    "oc-setup": "./dist/cli.js"
   },
   "files": [
     "dist",

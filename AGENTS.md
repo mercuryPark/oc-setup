@@ -2,6 +2,14 @@
 
 OpenCode 초기 환경 세팅 플러그인 + CLI (TypeScript/Bun). 설계 문서는 DESIGN.md에 있다.
 
+## Communication Rules
+
+- **User's Question Language**: Always respond in the same language as the user's question
+- **Language Detection**: Automatically detect the language of each user query
+- **Consistency**: Never switch languages mid-conversation or mid-response
+- **Technical Terms**: Technical terms may remain in English if no appropriate translation exists
+- **Code Comments**: Follow project conventions (English for code, user's language for explanations)
+
 ## 핵심 원칙
 
 - **DESIGN.md가 진실의 원천이다.** 구현 시 항상 DESIGN.md를 먼저 읽고 따를 것.

@@ -5,6 +5,7 @@ export type PreviousTool = "none" | "claude-code" | "cursor" | "aider" | "other"
 export type BudgetTier = "free" | "low" | "mid" | "high"
 export type PermissionLevel = "safe" | "balanced" | "auto"
 export type ProjectScale = "single" | "monorepo"
+export type FeatureType = "general" | "chat" | "ecommerce" | "content" | "dashboard" | "api"
 
 export interface MCPServerChoice {
   name: string
@@ -44,6 +45,11 @@ export interface OMOProfile {
   config?: OMOConfig
 }
 
+export interface AdvancedSettings {
+  temperature?: number
+  reasoningEffort?: "low" | "medium" | "high"
+}
+
 export interface UserProfile {
   experienceLevel: ExperienceLevel
   previousTool: PreviousTool
@@ -57,6 +63,8 @@ export interface UserProfile {
   mcpServers: MCPServerChoice[]
   plugins: string[]
   permissionLevel: PermissionLevel
+  featureType: FeatureType
   migrationSource?: MigrationSource
   omo?: OMOProfile
+  advancedSettings?: AdvancedSettings
 }

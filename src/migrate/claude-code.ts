@@ -1,6 +1,7 @@
-import { existsSync } from "fs"
+import { existsSync, readdirSync, readFileSync } from "fs"
 import { join } from "path"
 import { readFileSafe, writeFileSafe, backupFile, copyDirectory, formatMigrationResult } from "./common.js"
+import { migrateHooks } from "./hook-converter.js"
 
 interface ClaudeCodeConfig {
   model?: string
@@ -15,14 +16,6 @@ export function migrateClaudeCode(rootPath: string): string {
   const warnings: string[] = []
   const suggestions: string[] = []
 
-  const claudeMD = readFileSafe(join(rootPath, "CLAUDE.md"))
-  if (claudeMD) {
-    const destPath = join(rootPath, "AGENTS.md")
-    backupFile(destPath)
-    writeFileSafe(destPath, claudeMD)
-    files.push("AGENTS.md (기존 CLAUDE.md)")
-  }
-
   const skillsSrc = join(rootPath, ".claude", "skills")
   const skillsDest = join(rootPath, ".opencode", "skills")
   if (existsSync(skillsSrc)) {
@@ -31,11 +24,31 @@ export function migrateClaudeCode(rootPath: string): string {
   }
 
   const rulesSrc = join(rootPath, ".claude", "rules")
-  const rulesDest = join(rootPath, ".opencode", "rules")
+  const rulesContent: string[] = []
   if (existsSync(rulesSrc)) {
-    const copied = copyDirectory(rulesSrc, rulesDest)
-    files.push(...copied.map((f) => f.replace(rootPath + "/", "")))
-    suggestions.push(".claude/rules/ → .opencode/rules/ 마이그레이션됨")
+    const ruleFiles = readdirSync(rulesSrc).filter((f) => f.endsWith(".md"))
+    for (const ruleFile of ruleFiles) {
+      const rulePath = join(rulesSrc, ruleFile)
+      const ruleContent = readFileSync(rulePath, "utf-8")
+      rulesContent.push(`### ${ruleFile.replace(".md", "")}\n\n${ruleContent}`)
+    }
+    if (rulesContent.length > 0) {
+      suggestions.push(`${rulesContent.length}개 rule을 AGENTS.md에 병합함`)
+    }
+  }
+
+  const claudeMD = readFileSafe(join(rootPath, "CLAUDE.md"))
+  if (claudeMD) {
+    const destPath = join(rootPath, "AGENTS.md")
+    let finalContent = claudeMD
+    
+    if (rulesContent.length > 0 && !finalContent.includes("## Rules")) {
+      finalContent += "\n\n## Rules\n\n" + rulesContent.join("\n\n")
+    }
+    
+    backupFile(destPath)
+    writeFileSafe(destPath, finalContent)
+    files.push("AGENTS.md (기존 CLAUDE.md + rules 병합)")
   }
 
   const mcpConfig = readFileSafe(join(rootPath, ".mcp.json")) || readFileSafe(join(rootPath, "claude_desktop_config.json"))
@@ -58,9 +71,12 @@ export function migrateClaudeCode(rootPath: string): string {
     }
   }
 
-  const omccPath = join(rootPath, ".claude", "hooks", "oh-my-claude-code")
-  if (existsSync(omccPath)) {
-    suggestions.push("oh-my-claude-code 감지됨 - oh-my-opencode 설치 권장: npm install -g oh-my-opencode")
+  const hookResult = migrateHooks(rootPath)
+  if (hookResult.converted.length > 0) {
+    files.push(`.opencode/commands/ (${hookResult.converted.length}개 hook 변환됨)`)
+  }
+  if (hookResult.warnings.length > 0) {
+    warnings.push(...hookResult.warnings)
   }
 
   const opencodeConfig: Record<string, unknown> = {

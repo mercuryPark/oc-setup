@@ -1,6 +1,8 @@
 import { mkdirSync, existsSync, writeFileSync, cpSync, renameSync } from "fs"
 import { join, dirname } from "path"
 import type { UserProfile, OpenCodeConfig, PermissionConfig, AgentConfig, MCPConfig, LSPConfig } from "../types"
+import { createMCPConfig } from "./mcp-templates.js"
+import { addTUIConfigToGlobal } from "./tui-generator.js"
 
 /**
  * Write file atomically using temp file + rename pattern
@@ -53,22 +55,41 @@ function getPermissionConfig(level: UserProfile["permissionLevel"]): PermissionC
   }
 }
 
-function getAgentConfig(budget: UserProfile["budget"]): Record<string, AgentConfig> {
+function getAgentConfig(budget: UserProfile["budget"], advancedSettings?: UserProfile["advancedSettings"]): Record<string, AgentConfig> {
   const models = BUDGET_MODELS[budget] || BUDGET_MODELS.mid
-  return {
+  const config: Record<string, AgentConfig> = {
     build: { model: models.build },
     plan: { model: models.plan },
   }
+
+  if (advancedSettings) {
+    if (advancedSettings.temperature !== undefined) {
+      config.build.temperature = advancedSettings.temperature
+      config.plan.temperature = advancedSettings.temperature
+    }
+
+    if (advancedSettings.reasoningEffort !== undefined) {
+      config.build.reasoningEffort = advancedSettings.reasoningEffort
+      config.plan.reasoningEffort = advancedSettings.reasoningEffort
+    }
+  }
+
+  return config
 }
 
 function getMCPConfig(mcpServers: UserProfile["mcpServers"]): Record<string, MCPConfig> {
   const result: Record<string, MCPConfig> = {}
 
   for (const mcp of mcpServers) {
-    result[mcp.name] = {
-      type: "sse",
-      ...mcp.config,
-    } as MCPConfig
+    const templateConfig = createMCPConfig(mcp.name, mcp.config as Partial<MCPConfig>)
+    if (templateConfig) {
+      result[mcp.name] = templateConfig
+    } else {
+      result[mcp.name] = {
+        type: "sse",
+        ...mcp.config,
+      } as MCPConfig
+    }
   }
 
   return result
@@ -91,7 +112,10 @@ export function generateGlobalConfig(profile: UserProfile): OpenCodeConfig {
     theme: "opencode",
     autoupdate: true,
     plugin: profile.plugins,
+    default_agent: "build",
   }
+
+  addTUIConfigToGlobal(config as unknown as Record<string, unknown>, profile)
 
   if (profile.providers.length > 0) {
     config.provider = {}

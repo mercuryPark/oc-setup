@@ -180,7 +180,7 @@ describe("generateProjectConfig", () => {
     const config = generateProjectConfig(mcpProfile)
     expect(config.mcp).toBeDefined()
     expect(config.mcp?.filesystem).toBeDefined()
-    expect(config.mcp?.filesystem?.type).toBe("sse")
+    expect(config.mcp?.filesystem?.type).toBe("stdio")
     expect(config.mcp?.puppeteer).toBeDefined()
   })
 

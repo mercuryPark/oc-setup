@@ -1,6 +1,7 @@
 import { writeFileSync } from "fs"
 import { join } from "path"
 import type { UserProfile } from "../types"
+import { getFeatureConfig } from "./feature-presets.js"
 
 const PROVIDER_ENV_VARS: Record<string, { key: string; name: string }> = {
   anthropic: { key: "ANTHROPIC_API_KEY", name: "Anthropic" },
@@ -26,6 +27,15 @@ export function generateEnvExample(profile: UserProfile): string {
       lines.push(`${envConfig.key}=your_key_here`)
       lines.push("")
     }
+  }
+
+  const featureConfig = getFeatureConfig(profile.featureType)
+  if (featureConfig.envVars.length > 0) {
+    lines.push(`# ${featureConfig.name} 관련 설정`)
+    for (const envVar of featureConfig.envVars) {
+      lines.push(`${envVar}=`)
+    }
+    lines.push("")
   }
 
   lines.push("# Optional: Custom OpenCode settings")

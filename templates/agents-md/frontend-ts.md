@@ -2,6 +2,14 @@
 
 TypeScript + Next.js 프로젝트. App Router 사용.
 
+## Communication Rules
+
+- **User's Question Language**: Always respond in the same language as the user's question
+- **Language Detection**: Automatically detect the language of each user query
+- **Consistency**: Never switch languages mid-conversation or mid-response
+- **Technical Terms**: Technical terms may remain in English if no appropriate translation exists
+- **Code Comments**: Follow project conventions (English for code, user's language for explanations)
+
 ## Project Structure
 
 - `src/app/` - App Router 페이지 및 레이아웃

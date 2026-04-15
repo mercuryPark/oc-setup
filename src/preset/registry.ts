@@ -219,7 +219,7 @@ export function getOMOPreset(name: string): OMOPreset | undefined {
 export async function applyPreset(
   name: string,
   projectDir: string,
-  options: { projectName?: string; testRunner?: string; linter?: string } = {}
+  options: { projectName?: string; testRunner?: string; linter?: string; featureType?: string } = {}
 ): Promise<ApplyResult> {
   const files: string[] = []
   const warnings: string[] = []
@@ -253,10 +253,74 @@ export async function applyPreset(
     writeFileSync(configPath, JSON.stringify(newConfig, null, 2) + "\n")
     files.push(configPath)
 
+    // Also generate basic files like stack preset
+    const basicResult = await applyBasicFiles(projectDir, options)
+    files.push(...basicResult.files)
+    warnings.push(...basicResult.warnings)
+
     return { success: true, files, warnings }
   }
 
-  // Check if it's a stack preset
+  async function applyBasicFiles(
+    projectDir: string,
+    options: { projectName?: string; testRunner?: string; linter?: string; featureType?: string }
+  ): Promise<ApplyResult> {
+    const files: string[] = []
+    const warnings: string[] = []
+
+    const opencodeDir = join(projectDir, ".opencode")
+    const agentsDir = join(opencodeDir, "agents")
+    const commandsDir = join(opencodeDir, "commands")
+    const skillsDir = join(opencodeDir, "skills")
+
+    mkdirSync(agentsDir, { recursive: true })
+    mkdirSync(commandsDir, { recursive: true })
+    mkdirSync(skillsDir, { recursive: true })
+
+    const agentsMDSource = join(TEMPLATES_DIR, "agents-md", "base.md")
+    const agentsMDDest = join(projectDir, "AGENTS.md")
+    if (existsSync(agentsMDSource)) {
+      let content = readFileSync(agentsMDSource, "utf-8")
+      content = content.replace(/\{\{projectName\}\}/g, options.projectName || "My Project")
+      content = content.replace(/\{\{testRunner\}\}/g, options.testRunner || "vitest")
+      content = content.replace(/\{\{linter\}\}/g, options.linter || "biome")
+      writeFileSync(agentsMDDest, content)
+      files.push(agentsMDDest)
+    }
+
+    const defaultCommands = ["test.md", "lint.md", "review.md", "plan.md"]
+    for (const cmd of defaultCommands) {
+      const src = join(TEMPLATES_DIR, "commands", cmd)
+      const dest = join(commandsDir, cmd)
+      if (existsSync(src)) {
+        cpSync(src, dest)
+        files.push(dest)
+      }
+    }
+
+    const defaultAgents = ["reviewer.md", "tester.md", "planner.md"]
+    for (const agent of defaultAgents) {
+      const src = join(TEMPLATES_DIR, "agents", agent)
+      const dest = join(agentsDir, agent)
+      if (existsSync(src)) {
+        cpSync(src, dest)
+        files.push(dest)
+      }
+    }
+
+    const defaultSkills = ["code-review", "testing"]
+    for (const skill of defaultSkills) {
+      const src = join(TEMPLATES_DIR, "skills", skill)
+      const dest = join(skillsDir, skill)
+      if (existsSync(src)) {
+        cpSync(src, dest, { recursive: true })
+        files.push(dest)
+      }
+    }
+
+    return { success: true, files, warnings }
+  }
+
   const stackPreset = getStackPreset(name)
   if (stackPreset) {
     const { includes } = stackPreset

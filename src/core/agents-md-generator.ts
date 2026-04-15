@@ -2,6 +2,7 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync, cpSync } from "fs"
 import { join, dirname } from "path"
 import { fileURLToPath } from "url"
 import type { UserProfile } from "../types"
+import { getFeatureConfig } from "./feature-presets.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const TEMPLATES_DIR = join(__dirname, "templates/agents-md")
@@ -58,17 +59,31 @@ export function generateAgentsMD(profile: UserProfile): string {
   const templateName = getTemplateForFramework(profile.projectFramework)
   const templatePath = join(TEMPLATES_DIR, templateName)
 
+  let content: string
   if (!existsSync(templatePath)) {
     const fallbackPath = join(TEMPLATES_DIR, DEFAULT_TEMPLATE)
     if (!existsSync(fallbackPath)) {
-      return "# " + (profile.projectFramework || "My Project") + "\n\nProject configuration."
+      content = "# " + (profile.projectFramework || "My Project") + "\n\nProject configuration."
+    } else {
+      const fallbackContent = readFileSync(fallbackPath, "utf-8")
+      content = replaceVariables(fallbackContent, profile)
     }
-    const fallbackContent = readFileSync(fallbackPath, "utf-8")
-    return replaceVariables(fallbackContent, profile)
+  } else {
+    const templateContent = readFileSync(templatePath, "utf-8")
+    content = replaceVariables(templateContent, profile)
   }
 
-  const content = readFileSync(templatePath, "utf-8")
-  return replaceVariables(content, profile)
+  const featureConfig = getFeatureConfig(profile.featureType)
+  if (featureConfig.agnetsMDSections.length > 0) {
+    content += "\n\n## 기능별 가이드: " + featureConfig.name + "\n\n"
+    content += featureConfig.agnetsMDSections.join("\n")
+    content += "\n\n### 아키텍처 팁\n\n"
+    for (const tip of featureConfig.architectureTips) {
+      content += "- " + tip + "\n"
+    }
+  }
+
+  return content
 }
 
 function backupFile(path: string): void {
