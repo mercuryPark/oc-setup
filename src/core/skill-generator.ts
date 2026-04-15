@@ -1,8 +1,9 @@
-import { existsSync, readFileSync, writeFileSync, mkdirSync, cpSync } from "fs"
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "fs"
 import { join, dirname } from "path"
 import { fileURLToPath } from "url"
 import type { UserProfile } from "../types"
 import { getFeatureConfig } from "./feature-presets.js"
+import { backupFile } from "../utils/fs.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const TEMPLATES_DIR = join(__dirname, "templates/skills")
@@ -46,13 +47,6 @@ export function generateSkills(profile: UserProfile): Record<string, string> {
   }
 
   return skills
-}
-
-function backupFile(path: string): void {
-  if (existsSync(path)) {
-    const backupPath = `${path}.bak`
-    cpSync(path, backupPath)
-  }
 }
 
 export function writeSkills(skills: Record<string, string>, dir: string): void {

@@ -1,5 +1,6 @@
 import { join } from "path"
 import { existsSync, readFileSync } from "fs"
+import { homedir } from "os"
 
 interface ValidationError {
   type: "error" | "warning"
@@ -10,12 +11,11 @@ interface ValidationError {
 export async function runValidation(directory: string): Promise<string> {
   const errors: ValidationError[] = []
 
-  const globalConfigPath = join(process.env.HOME || "~", ".config/opencode/opencode.json")
-  const expandedGlobalPath = globalConfigPath.replace("~", process.env.HOME || "")
+  const globalConfigPath = join(homedir(), ".config/opencode/opencode.json")
 
-  if (existsSync(expandedGlobalPath)) {
+  if (existsSync(globalConfigPath)) {
     try {
-      const content = readFileSync(expandedGlobalPath, "utf-8")
+      const content = readFileSync(globalConfigPath, "utf-8")
       const config = JSON.parse(content)
 
       if (!config.$schema) {

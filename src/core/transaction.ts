@@ -1,10 +1,10 @@
 import { existsSync, unlinkSync, rmdirSync, renameSync, writeFileSync, mkdirSync } from "fs"
-import { dirname } from "path"
 
 export interface FileOperation {
   type: "write" | "mkdir" | "backup"
   path: string
   backupPath?: string
+  content?: string
 }
 
 export class FileTransaction {
@@ -12,22 +12,17 @@ export class FileTransaction {
   private completed: FileOperation[] = []
   private rolledBack = false
 
-  /**
-   * 파일 쓰기 작업 등록
-   */
   writeFile(filePath: string, content: string): void {
     const backupPath = existsSync(filePath) ? `${filePath}.txbak.${Date.now()}` : undefined
-    
+
     this.operations.push({
       type: "write",
       path: filePath,
+      content,
       backupPath,
     })
   }
 
-  /**
-   * 디렉토리 생성 작업 등록
-   */
   mkdir(dirPath: string): void {
     if (!existsSync(dirPath)) {
       this.operations.push({
@@ -37,10 +32,7 @@ export class FileTransaction {
     }
   }
 
-  /**
-   * 모든 작업 실행
-   */
-  async execute(writeFn: (path: string, content: string) => void): Promise<void> {
+  async execute(): Promise<void> {
     if (this.rolledBack) {
       throw new Error("Transaction has already been rolled back")
     }
@@ -63,18 +55,16 @@ export class FileTransaction {
           if (op.backupPath && existsSync(op.path)) {
             renameSync(op.path, op.backupPath)
           }
+          writeFileSync(op.path, op.content!, "utf-8")
           this.completed.push(op)
         } catch (error) {
           await this.rollback()
-          throw new Error(`Failed to backup file ${op.path}: ${error}`)
+          throw new Error(`Failed to write file ${op.path}: ${error}`)
         }
       }
     }
   }
 
-  /**
-   * 실패 시 롤백
-   */
   async rollback(): Promise<void> {
     if (this.rolledBack) return
 
@@ -94,8 +84,8 @@ export class FileTransaction {
         } else if (op.type === "mkdir") {
           try {
             rmdirSync(op.path)
-        } catch {
-        }
+          } catch {
+          }
         }
       } catch {
       }
@@ -118,9 +108,10 @@ export async function withTransaction<T>(
   fn: (tx: FileTransaction) => Promise<T>
 ): Promise<T> {
   const tx = new FileTransaction()
-  
+
   try {
     const result = await fn(tx)
+    await tx.execute()
     tx.commit()
     return result
   } catch (error) {

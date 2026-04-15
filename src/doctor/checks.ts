@@ -1,7 +1,8 @@
 import { join } from "path"
 import { homedir } from "os"
 import { existsSync, readFileSync } from "fs"
-import { execSync } from "child_process"
+import { execFileSync } from "child_process"
+import { platform } from "os"
 
 export interface CheckResult {
   name: string
@@ -12,7 +13,12 @@ export interface CheckResult {
 
 function execCommand(cmd: string[]): { exitCode: number; stdout: string } {
   try {
-    const stdout = execSync(cmd.join(" "), { encoding: "utf-8", stdio: ["pipe", "pipe", "ignore"] })
+    const [bin, ...args] = cmd
+    const actualBin = bin === "which" && platform() === "win32" ? "where" : bin
+    const stdout = execFileSync(actualBin, args, {
+      encoding: "utf-8",
+      stdio: ["pipe", "pipe", "ignore"],
+    })
     return { exitCode: 0, stdout: stdout.trim() }
   } catch (e) {
     const err = e as { status?: number }
@@ -51,16 +57,13 @@ function checkBun(): CheckResult {
   return { name: "Bun", status: "fail", message: "Bun not found", fix: "Install Bun: https://bun.sh" }
 }
 
-function checkApiKeys(): CheckResult {
+function checkApiKeys(verbose = false): CheckResult {
   const keys = ["ANTHROPIC_API_KEY", "GEMINI_API_KEY", "OPENAI_API_KEY", "DEEPSEEK_API_KEY", "OPENROUTER_API_KEY"]
   const found: string[] = []
-  const missing: string[] = []
 
   for (const key of keys) {
     if (process.env[key]) {
       found.push(key)
-    } else {
-      missing.push(key)
     }
   }
 
@@ -68,7 +71,13 @@ function checkApiKeys(): CheckResult {
     return { name: "API Keys", status: "fail", message: "No API keys configured", fix: "Set at least one API key: ANTHROPIC_API_KEY, GEMINI_API_KEY, or OPENAI_API_KEY" }
   }
 
-  return { name: "API Keys", status: "pass", message: `Configured: ${found.join(", ")}` }
+  return {
+    name: "API Keys",
+    status: "pass",
+    message: verbose
+      ? `Configured: ${found.join(", ")} (${found.length}/${keys.length})`
+      : `${found.length}/${keys.length} API key(s) configured`,
+  }
 }
 
 function checkAuthFile(): CheckResult {
@@ -87,7 +96,7 @@ function checkConfig(): CheckResult {
   const expandedPath = configPath.replace("~", homedir())
 
   if (!existsSync(expandedPath)) {
-    return { name: "Global Config", status: "warn", message: "Global opencode.json not found", fix: "Run 'npx @mercurypark/opencode-setup init' or configure OpenCode manually" }
+    return { name: "Global Config", status: "warn", message: "Global opencode.json not found", fix: "Run 'npx @hoyeon0722/opencode-setup init' or configure OpenCode manually" }
   }
 
   try {
@@ -103,7 +112,7 @@ function checkProjectConfig(directory: string): CheckResult {
   const configPath = join(directory, "opencode.json")
 
   if (!existsSync(configPath)) {
-    return { name: "Project Config", status: "warn", message: "No project opencode.json", fix: "Run 'npx @mercurypark/opencode-setup init' or create opencode.json in project root" }
+    return { name: "Project Config", status: "warn", message: "No project opencode.json", fix: "Run 'npx @hoyeon0722/opencode-setup init' or create opencode.json in project root" }
   }
 
   try {
@@ -119,7 +128,7 @@ function checkAgentsMD(directory: string): CheckResult {
   const agentsPath = join(directory, "AGENTS.md")
 
   if (!existsSync(agentsPath)) {
-    return { name: "AGENTS.md", status: "warn", message: "AGENTS.md not found", fix: "Run 'npx @mercurypark/opencode-setup init' or create AGENTS.md with project guidelines" }
+    return { name: "AGENTS.md", status: "warn", message: "AGENTS.md not found", fix: "Run 'npx @hoyeon0722/opencode-setup init' or create AGENTS.md with project guidelines" }
   }
 
   const content = readFileSync(agentsPath, "utf-8")

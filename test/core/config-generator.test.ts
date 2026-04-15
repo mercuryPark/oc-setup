@@ -1,6 +1,7 @@
-import { describe, test, expect, beforeEach, afterEach } from "bun:test"
+import { describe, test, expect, beforeEach, afterEach } from "vitest"
 import { mkdirSync, rmSync, existsSync, writeFileSync, readdirSync } from "fs"
-import { join } from "path"
+import { join, dirname } from "path"
+import { fileURLToPath } from "url"
 import {
   generateGlobalConfig,
   generateProjectConfig,
@@ -11,7 +12,7 @@ import {
 import type { UserProfile, OpenCodeConfig } from "../../src/types"
 
 // Test temp directory
-const testDir = join(import.meta.dir, "test-temp")
+const testDir = join(dirname(fileURLToPath(import.meta.url)), "test-temp")
 
 beforeEach(() => {
   if (!existsSync(testDir)) {

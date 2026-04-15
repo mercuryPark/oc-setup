@@ -1,5 +1,6 @@
-import { readFileSync, writeFileSync, existsSync, cpSync, mkdirSync, readdirSync } from "fs"
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, cpSync } from "fs"
 import { join, dirname } from "path"
+import { backupFile } from "../utils/fs.js"
 
 export function readFileSafe(filePath: string): string | null {
   try {
@@ -16,9 +17,7 @@ export function writeFileSafe(filePath: string, content: string): void {
   writeFileSync(filePath, content, "utf-8")
 }
 
-export function backupFile(filePath: string): void {
-  if (existsSync(filePath)) cpSync(filePath, `${filePath}.bak`)
-}
+export { backupFile } from "../utils/fs.js"
 
 export function copyDirectory(src: string, dest: string): string[] {
   const copied: string[] = []

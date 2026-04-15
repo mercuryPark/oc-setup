@@ -248,7 +248,12 @@ export async function runInitWizard(): Promise<void> {
     console.log("3. 프로젝트에서 'opencode' 명령어를 사용필요합니다.")
     return
   } catch (error) {
+    if (error instanceof Error && error.name === "ExitPromptError") {
+      console.log("\n❌ 세팅이 취소되었습니다.")
+      process.exit(130)
+    }
     console.error("\n❌ 파일 생성 중 오류가 발생했습니다:")
     console.error(error instanceof Error ? error.message : String(error))
+    process.exit(1)
   }
 }

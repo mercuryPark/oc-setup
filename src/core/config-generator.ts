@@ -1,8 +1,9 @@
-import { mkdirSync, existsSync, writeFileSync, cpSync, renameSync } from "fs"
+import { mkdirSync, existsSync, writeFileSync, renameSync } from "fs"
 import { join, dirname } from "path"
 import type { UserProfile, OpenCodeConfig, PermissionConfig, AgentConfig, MCPConfig, LSPConfig } from "../types"
 import { createMCPConfig } from "./mcp-templates.js"
 import { addTUIConfigToGlobal } from "./tui-generator.js"
+import { backupFile } from "../utils/fs.js"
 
 /**
  * Write file atomically using temp file + rename pattern
@@ -156,13 +157,6 @@ export function generateProjectConfig(profile: UserProfile): OpenCodeConfig {
   }
 
   return config
-}
-
-function backupFile(path: string): void {
-  if (existsSync(path)) {
-    const backupPath = `${path}.bak.${Date.now()}`
-    cpSync(path, backupPath)
-  }
 }
 
 export function writeConfig(config: OpenCodeConfig, filePath: string): void {

@@ -1,8 +1,9 @@
-import { existsSync, readFileSync, writeFileSync, mkdirSync, cpSync } from "fs"
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "fs"
 import { join, dirname } from "path"
 import { fileURLToPath } from "url"
 import type { UserProfile } from "../types"
 import { getFeatureConfig } from "./feature-presets.js"
+import { backupFile } from "../utils/fs.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const TEMPLATES_DIR = join(__dirname, "templates/agents-md")
@@ -74,9 +75,9 @@ export function generateAgentsMD(profile: UserProfile): string {
   }
 
   const featureConfig = getFeatureConfig(profile.featureType)
-  if (featureConfig.agnetsMDSections.length > 0) {
+  if (featureConfig.agentsMDSections.length > 0) {
     content += "\n\n## 기능별 가이드: " + featureConfig.name + "\n\n"
-    content += featureConfig.agnetsMDSections.join("\n")
+    content += featureConfig.agentsMDSections.join("\n")
     content += "\n\n### 아키텍처 팁\n\n"
     for (const tip of featureConfig.architectureTips) {
       content += "- " + tip + "\n"
@@ -84,13 +85,6 @@ export function generateAgentsMD(profile: UserProfile): string {
   }
 
   return content
-}
-
-function backupFile(path: string): void {
-  if (existsSync(path)) {
-    const backupPath = `${path}.bak`
-    cpSync(path, backupPath)
-  }
 }
 
 export function writeAgentsMD(content: string, dir: string): void {

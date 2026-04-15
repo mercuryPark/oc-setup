@@ -16,6 +16,17 @@ export function migrateClaudeCode(rootPath: string): string {
   const warnings: string[] = []
   const suggestions: string[] = []
 
+  const hasClaude = [
+    join(rootPath, "CLAUDE.md"),
+    join(rootPath, ".claude"),
+    join(rootPath, ".mcp.json"),
+    join(rootPath, "claude_desktop_config.json"),
+  ].some(existsSync)
+
+  if (!hasClaude) {
+    return `❌ Claude Code 설정을 찾을 수 없습니다.\n\n확인한 경로:\n  • ${rootPath}/CLAUDE.md\n  • ${rootPath}/.claude/\n  • ${rootPath}/.mcp.json\n\n수동 지정: opencode-setup migrate claude-code --sourcePath <path>`
+  }
+
   const skillsSrc = join(rootPath, ".claude", "skills")
   const skillsDest = join(rootPath, ".opencode", "skills")
   if (existsSync(skillsSrc)) {

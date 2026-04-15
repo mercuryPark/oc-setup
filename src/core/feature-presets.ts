@@ -13,7 +13,7 @@ export interface FeatureConfig {
   additionalAgents: string[]
   additionalSkills: string[]
   additionalCommands: string[]
-  agnetsMDSections: string[]
+  agentsMDSections: string[]
   recommendedPlugins: string[]
   envVars: string[]
   architectureTips: string[]
@@ -26,7 +26,7 @@ export const FEATURE_CONFIGS: Record<FeatureType, FeatureConfig> = {
     additionalAgents: [],
     additionalSkills: [],
     additionalCommands: [],
-    agnetsMDSections: [],
+    agentsMDSections: [],
     recommendedPlugins: [],
     envVars: [],
     architectureTips: [],
@@ -37,7 +37,7 @@ export const FEATURE_CONFIGS: Record<FeatureType, FeatureConfig> = {
     additionalAgents: ["websocket-expert", "realtime-engineer"],
     additionalSkills: ["socket-io", "redis-pubsub", "realtime-testing"],
     additionalCommands: ["/socket-debug", "/load-test"],
-    agnetsMDSections: [
+    agentsMDSections: [
       "## Realtime Architecture",
       "- WebSocket 연결 관리 및 재연결 전략",
       "- 메시지 큐(Redis/RabbitMQ) 활용",
@@ -67,7 +67,7 @@ export const FEATURE_CONFIGS: Record<FeatureType, FeatureConfig> = {
     additionalAgents: ["payment-expert", "inventory-manager"],
     additionalSkills: ["payment-gateway", "order-management", "inventory-tracking"],
     additionalCommands: ["/order-status", "/inventory-check"],
-    agnetsMDSections: [
+    agentsMDSections: [
       "## Payment Integration",
       "- 결제 gateway 추상화 레이어 구현",
       "- Webhook 처리 및 멱등성 보장",
@@ -97,7 +97,7 @@ export const FEATURE_CONFIGS: Record<FeatureType, FeatureConfig> = {
     additionalAgents: ["seo-expert", "content-editor"],
     additionalSkills: ["seo-optimization", "rich-text-editor", "media-handling"],
     additionalCommands: ["/seo-check", "/publish-content"],
-    agnetsMDSections: [
+    agentsMDSections: [
       "## Content Structure",
       "-_slug 기반 URL",
       "- draft/published/archived 상태 관리",
@@ -127,7 +127,7 @@ export const FEATURE_CONFIGS: Record<FeatureType, FeatureConfig> = {
     additionalAgents: ["data-viz-expert", "query-optimizer"],
     additionalSkills: ["chart-library", "data-fetching", "caching-strategy"],
     additionalCommands: ["/query-analyze", "/cache-stats"],
-    agnetsMDSections: [
+    agentsMDSections: [
       "## Data Fetching",
       "- React Query/SWR 필수",
       "- Pagination + Cursor 기반",
@@ -157,7 +157,7 @@ export const FEATURE_CONFIGS: Record<FeatureType, FeatureConfig> = {
     additionalAgents: ["api-designer", "security-reviewer"],
     additionalSkills: ["api-documentation", "rate-limiting", "authentication"],
     additionalCommands: ["/api-test", "/security-scan"],
-    agnetsMDSections: [
+    agentsMDSections: [
       "## API Design",
       "- RESTful 원칙 준수",
       "- 버전 관리 (/v1/, /v2/)",

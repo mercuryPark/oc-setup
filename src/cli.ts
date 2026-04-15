@@ -1,3 +1,6 @@
+import { readFileSync } from "fs"
+import { fileURLToPath } from "url"
+import { dirname, join } from "path"
 import { Command } from "commander"
 import { runInitWizard } from "./prompt/wizard.js"
 import { listPresets, applyPreset } from "./preset/registry.js"
@@ -6,12 +9,17 @@ import { runAllChecks } from "./doctor/checks.js"
 import { formatReport } from "./doctor/reporter.js"
 import { runMigration, autoMigrate } from "./migrate/index.js"
 
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const pkg = JSON.parse(
+  readFileSync(join(__dirname, "..", "package.json"), "utf-8")
+) as { version: string }
+
 const program = new Command()
 
 program
-  .name("@mercurypark/opencode-setup")
+  .name("@hoyeon0722/opencode-setup")
   .description("OpenCode 초기 환경 세팅 도구")
-  .version("0.1.0")
+  .version(pkg.version)
 
 program
   .command("init")
@@ -30,7 +38,18 @@ preset
   .description("프리셋 적용")
   .action(async (name: string) => {
     const result = await applyPreset(name, process.cwd())
-    console.log(JSON.stringify(result, null, 2))
+    if (result.success) {
+      console.log(`✅ Preset '${name}' 적용 완료`)
+      for (const f of result.files) console.log(`  • ${f}`)
+      if (result.warnings.length) {
+        console.warn("\n⚠️  Warnings:")
+        for (const w of result.warnings) console.warn(`  • ${w}`)
+      }
+    } else {
+      console.error(`❌ Preset '${name}' 적용 실패`)
+      for (const w of result.warnings) console.error(`  • ${w}`)
+      process.exit(1)
+    }
   })
 
 program
@@ -38,13 +57,17 @@ program
   .description("기존 도구 마이그레이션 (claude-code, cursor, aider). 도구 미지정 시 자동 감지")
   .action(async (tool: string | undefined) => {
     const projectDir = process.cwd()
+    let result: string
     if (!tool) {
       console.log("🔍 자동 감지 중...")
-      console.log(autoMigrate(projectDir))
-      return
+      result = autoMigrate(projectDir)
+    } else {
+      result = await runMigration(tool as "claude-code" | "cursor" | "aider", projectDir)
     }
-    const result = await runMigration(tool as "claude-code" | "cursor" | "aider", projectDir)
     console.log(result)
+    if (result.startsWith("❌") || result.includes("찾을 수 없습니다")) {
+      process.exit(1)
+    }
   })
 
 program
@@ -77,6 +100,10 @@ process.on('uncaughtException', (error) => {
 })
 
 process.on('unhandledRejection', (reason) => {
+  if (reason instanceof Error && reason.name === "ExitPromptError") {
+    console.log('\n❌ 세팅이 취소되었습니다.')
+    process.exit(130)
+  }
   console.error(`Unhandled rejection: ${reason}`)
   process.exit(1)
 })
