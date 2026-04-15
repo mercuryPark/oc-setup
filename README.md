@@ -1,11 +1,11 @@
-# @hoeyon0722/opencode-setup
+# @mercurypark/opencode-setup
 
-[![npm version](https://img.shields.io/npm/v/@hoeyon0722/opencode-setup?color=cb3837)](https://www.npmjs.com/package/@hoeyon0722/opencode-setup)
+[![npm version](https://img.shields.io/npm/v/@mercurypark/opencode-setup?color=cb3837)](https://www.npmjs.com/package/@mercurypark/opencode-setup)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 > **OpenCode 환경 세팅, 한 번의 실행으로.**
 
-`opencode-setup`은 OpenCode의 초기 환경 세팅을 대화형으로 도와주는 **플러그인 겸 CLI 도구**입니다. 모델 선택, 프로젝트 규칙, 커스텀 에이전트, 플러그인, Skill, 권한 설정까지 — 문서를 읽고 직접 JSON을 작성하는 과정을 한 번의 실행으로 대체합니다.
+`@mercurypark/opencode-setup`은 OpenCode의 초기 환경 세팅을 대화형으로 도와주는 **플러그인 겸 CLI 도구**입니다. 모델 선택, 프로젝트 규칙, 커스텀 에이전트, 플러그인, Skill, 권한 설정까지 — 문서를 읽고 직접 JSON을 작성하는 과정을 한 번의 실행으로 대체합니다.
 
 ### ✨ 주요 기능
 
@@ -37,10 +37,10 @@ OpenCode는 75개 이상의 Provider와 수십 개의 설정 옵션을 지원합
 
 ```bash
 # OpenCode 플러그인 (추천)
-npm install @hoeyon0722/opencode-setup
+npm install @mercurypark/opencode-setup
 
 # 또는 npx로 직접 실행
-npx @hoeyon0722/opencode-setup init
+npx @mercurypark/opencode-setup init
 ```
 
 ### Step 2: 초기화
@@ -77,10 +77,10 @@ OpenCode를 재시작하면 자동 로드됩니다. OpenCode 안에서 AI에게 
 
 ```bash
 # 권장: npx로 실행 (설치 불필요)
-npx @hoeyon0722/opencode-setup init
+npx @mercurypark/opencode-setup init
 
 # 전역 설치 시 (권장하지 않음)
-npm install -g @hoeyon0722/opencode-setup
+npm install -g @mercurypark/opencode-setup
 oc-setup init
 ```
 
@@ -91,7 +91,7 @@ OpenCode 설정이 아직 없는 신규 사용자도 이 방법으로 바로 시
 ### 시나리오 1 — AI 코딩 도구가 처음인 경우
 
 ```bash
-npx @hoeyon0722/opencode-setup init
+npx @mercurypark/opencode-setup init
 ```
 
 대화형 위자드가 실행됩니다:

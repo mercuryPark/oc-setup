@@ -106,9 +106,9 @@ export function getContextualErrorMessage(
   const baseMessage = formatErrorForConsole(error)
 
   const contextHelp: Record<string, string> = {
-    init: "\n📚 도움말: 'npx @hoeyon0722/opencode-setup init --help'로 더 많은 정보를 확인할 수 있습니다.",
+    init: "\n📚 도움말: 'npx @mercurypark/opencode-setup init --help'로 더 많은 정보를 확인할 수 있습니다.",
     migrate: "\n📚 도움말: 마이그레이션 중 문제가 발생했습니다. 원본 파일은 안전하게 백업되었습니다.",
-    preset: "\n📚 도움말: 'npx @hoeyon0722/opencode-setup preset list'로 사용 가능한 프리셋을 확인하세요.",
+    preset: "\n📚 도움말: 'npx @mercurypark/opencode-setup preset list'로 사용 가능한 프리셋을 확인하세요.",
     validate: "\n📚 도움말: opencode.json 파일 형식을 확인해주세요.",
     doctor: "\n📚 도움말: 환경 설정 문제입니다. 위 안내를 따라 해결해주세요.",
   }
