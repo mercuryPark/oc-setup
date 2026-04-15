@@ -1,6 +1,6 @@
 {
   "name": "@hoyeon0722/opencode-setup",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "OpenCode 환경 세팅 CLI + Plugin.",
   "type": "module",
   "license": "MIT",
