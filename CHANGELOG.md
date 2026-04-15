@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-04-15
+
+### Fixed
+
+- README `plugin` key restored to singular form (was incorrectly changed to `plugins`)
+- GitHub community files added: CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md
+- GitHub issue and PR templates added
+
+### Changed
+
+- README badges expanded to 5 (npm version, downloads, CI, license, install size)
+- `package.json` `files` now includes CHANGELOG.md for npm distribution
+
+---
+
 ## [0.3.0] - 2026-04-15
 
 ### Changed (Breaking)

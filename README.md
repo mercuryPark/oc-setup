@@ -1,7 +1,10 @@
 # @hoyeon0722/opencode-setup
 
 [![npm version](https://img.shields.io/npm/v/@hoyeon0722/opencode-setup?color=cb3837)](https://www.npmjs.com/package/@hoyeon0722/opencode-setup)
+[![npm downloads](https://img.shields.io/npm/dm/@hoyeon0722/opencode-setup)](https://www.npmjs.com/package/@hoyeon0722/opencode-setup)
+[![CI](https://github.com/mercuryPark/oc-setup/actions/workflows/ci.yml/badge.svg)](https://github.com/mercuryPark/oc-setup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![install size](https://packagephobia.com/badge?p=@hoyeon0722/opencode-setup)](https://packagephobia.com/result?p=@hoyeon0722/opencode-setup)
 
 > **OpenCode 환경 세팅, 한 번의 실행으로.**
 
@@ -64,7 +67,7 @@ OpenCode를 재시작하면 바로 작업을 시작할 수 있습니다!
 `opencode.json`에 추가:
 ```json
 {
-  "plugins": ["@hoyeon0722/opencode-setup"]
+  "plugin": ["@hoyeon0722/opencode-setup"]
 }
 ```
 
