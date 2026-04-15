@@ -38,3 +38,4 @@ coverage/
 # OMC
 .omc/
 .sisyphus/
+*.bak.*
