@@ -1,6 +1,7 @@
 import { readFileSync } from "fs"
 import { fileURLToPath } from "url"
 import { dirname, join } from "path"
+import { Option } from "commander"
 import { Command } from "commander"
 import { runInitWizard } from "./prompt/wizard.js"
 import { listPresets, applyPreset } from "./preset/registry.js"
@@ -8,6 +9,7 @@ import { runValidation } from "./validator/config-validator.js"
 import { runAllChecks } from "./doctor/checks.js"
 import { formatReport } from "./doctor/reporter.js"
 import { runMigration, autoMigrate } from "./migrate/index.js"
+import { setLogLevel, setJsonMode, LogLevel, log, error, warn, json, isJsonMode } from "./utils/logger.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pkg = JSON.parse(
@@ -20,6 +22,21 @@ program
   .name("@hoyeon0722/opencode-setup")
   .description("OpenCode 초기 환경 세팅 도구")
   .version(pkg.version)
+  .addOption(new Option("-q, --quiet", "Suppress informational output").implies({ verbose: false }))
+  .addOption(new Option("-v, --verbose", "Show detailed output"))
+  .addOption(new Option("--json", "Output machine-readable JSON").implies({ quiet: false }))
+
+program.hook("preAction", (thisCommand) => {
+  const opts = thisCommand.opts()
+  if (opts.quiet) {
+    setLogLevel(LogLevel.SILENT)
+  } else if (opts.verbose) {
+    setLogLevel(LogLevel.VERBOSE)
+  }
+  if (opts.json) {
+    setJsonMode(true)
+  }
+})
 
 program
   .command("init")
@@ -31,23 +48,30 @@ preset
   .command("list")
   .description("프리셋 목록")
   .action(() => {
-    console.log(listPresets())
+    const presets = listPresets()
+    if (isJsonMode()) {
+      json(presets)
+    } else {
+      log(presets)
+    }
   })
 preset
   .command("apply <name>")
   .description("프리셋 적용")
   .action(async (name: string) => {
     const result = await applyPreset(name, process.cwd())
-    if (result.success) {
-      console.log(`✅ Preset '${name}' 적용 완료`)
-      for (const f of result.files) console.log(`  • ${f}`)
+    if (isJsonMode()) {
+      json(result)
+    } else if (result.success) {
+      log(`✅ Preset '${name}' 적용 완료`)
+      for (const f of result.files) log(`  • ${f}`)
       if (result.warnings.length) {
-        console.warn("\n⚠️  Warnings:")
-        for (const w of result.warnings) console.warn(`  • ${w}`)
+        warn("\n⚠️  Warnings:")
+        for (const w of result.warnings) warn(`  • ${w}`)
       }
     } else {
-      console.error(`❌ Preset '${name}' 적용 실패`)
-      for (const w of result.warnings) console.error(`  • ${w}`)
+      error(`❌ Preset '${name}' 적용 실패`)
+      for (const w of result.warnings) error(`  • ${w}`)
       process.exit(1)
     }
   })
@@ -59,12 +83,12 @@ program
     const projectDir = process.cwd()
     let result: string
     if (!tool) {
-      console.log("🔍 자동 감지 중...")
+      log("🔍 자동 감지 중...")
       result = autoMigrate(projectDir)
     } else {
       result = await runMigration(tool as "claude-code" | "cursor" | "aider", projectDir)
     }
-    console.log(result)
+    log(result)
     if (result.startsWith("❌") || result.includes("찾을 수 없습니다")) {
       process.exit(1)
     }
@@ -75,7 +99,11 @@ program
   .description("설정 검증")
   .action(async () => {
     const result = await runValidation(process.cwd())
-    console.log(result)
+    if (isJsonMode()) {
+      json({ output: result })
+    } else {
+      log(result)
+    }
   })
 
 program
@@ -83,27 +111,31 @@ program
   .description("환경 진단")
   .action(async () => {
     const results = await runAllChecks(process.cwd())
-    console.log(formatReport(results))
+    const report = formatReport(results)
+    if (isJsonMode()) {
+      json(results)
+    } else {
+      log(report)
+    }
   })
 
 program.parse()
 
-// Exit code handling
-process.on('SIGINT', () => {
-  console.log('\nCancelled by user')
+process.on("SIGINT", () => {
+  log("\nCancelled by user")
   process.exit(130)
 })
 
-process.on('uncaughtException', (error) => {
-  console.error(`Fatal error: ${error.message}`)
+process.on("uncaughtException", (err) => {
+  error(`Fatal error: ${err.message}`)
   process.exit(1)
 })
 
-process.on('unhandledRejection', (reason) => {
+process.on("unhandledRejection", (reason) => {
   if (reason instanceof Error && reason.name === "ExitPromptError") {
-    console.log('\n❌ 세팅이 취소되었습니다.')
+    log("\n❌ 세팅이 취소되었습니다.")
     process.exit(130)
   }
-  console.error(`Unhandled rejection: ${reason}`)
+  error(`Unhandled rejection: ${reason}`)
   process.exit(1)
 })
