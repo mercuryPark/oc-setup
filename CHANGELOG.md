@@ -7,9 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `scripts/validate-models.ts` — model ID validator for src/ and templates/omo/ (npm run validate:models)
+- Global `--json`, `--quiet`/`-q`, `--verbose`/`-v` CLI flags for output control
+- Dedicated `src/utils/logger.ts` with LogLevel enum and structured output
+
+### Changed
+
+- All CLI commands updated to use the new logger (JSON output mode supported)
+- `vitest` coverage reporters extended with `json` and `lcov` for Codecov
+
 ### Dependencies
 
 - Updated `@inquirer/prompts` from `^6.0.0` to `^8.4.1` (Node ≥20.12 required, ESM-only)
+- Added `tsx` devDependency for running scripts
 
 ---
 
