@@ -55,7 +55,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "tsup src/index.ts src/cli.ts --format esm --outDir dist --target node18 --external @opencode-ai/plugin --external zod --external commander --external @inquirer/prompts --clean && tsc --emitDeclarationOnly && chmod +x dist/cli.js && sed -i '' '1s/^/#!\\/usr\\/bin\\/env node\\n/' dist/cli.js && rm -rf dist/templates && cp -r templates dist/templates",
+    "build": "tsup src/index.ts src/cli.ts --format esm --outDir dist --target node18 --external @opencode-ai/plugin --external zod --external commander --external @inquirer/prompts --clean && tsc --emitDeclarationOnly && node -e \"const fs=require('fs');const d=fs.readFileSync('dist/cli.js','utf8');fs.writeFileSync('dist/cli.js','#!/usr/bin/env node\\n'+d);\" && chmod +x dist/cli.js && rm -rf dist/templates && cp -r templates dist/templates",
     "prepare": "npm run build",
     "lint": "tsc --noEmit",
     "test": "vitest run",
