@@ -24,30 +24,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed (Breaking)
 
+- `engines.node` raised to `>=20` (vitest requirement)
 - `FeatureConfig.agnetsMDSections` renamed to `agentsMDSections` (typo fix). External consumers using this field must update.
+
+### Added
+
+- GitHub Actions CI workflow with Node 20/22 × Linux/macOS matrix
+- `picocolors` for colorized CLI output with `NO_COLOR` support
+- `ora` for spinner/progress indication
+- `src/utils/color.ts` - Color utility with NO_COLOR auto-detection
+- `src/utils/error.ts` - Standardized 3-tier error messages
+- Enhanced agent templates (reviewer, tester, planner) with 79-100 lines each
+- `tsup.config.ts` for cross-platform builds
 
 ### Changed
 
-- Unified `backupFile` into `src/utils/fs.ts` with timestamped backups (DRY fix)
-- `config-validator.ts` now uses `homedir()` instead of `process.env.HOME` fallback
-- CLI commands now return non-zero exit code on failure (preset apply, migrate)
-- `doctor/checks.ts` uses `execFileSync` instead of `execSync` (security hardening)
-- `doctor/checks.ts` no longer exposes API key names in output (security)
+- Build script now uses `tsup.config.ts` (BREAKING: requires Node >=20)
+- CLI commands now return non-zero exit code on failure
+- `doctor/checks.ts` uses `execFileSync` instead of `execSync` (security)
+- `doctor/checks.ts` no longer exposes API key names in output
+- Unified `backupFile` into `src/utils/fs.ts` with timestamped backups
 
 ### Fixed
 
 - Gracefully handle Ctrl+C ExitPromptError with user-friendly message and exit 130
 - `migrate claude-code` now returns error when no Claude config exists
-- OMO preset model IDs verified and corrected:
-  - `google/antigravity-gemini-3-pro` → `google/gemini-3-pro-preview`
-  - `kimi-for-coding/k2p5` → `moonshot/kimi-k2.5`
-  - `venice/minimax-m2.7` → `opencode-go/minimax-m2.7`
+- OMO preset model IDs verified and corrected
+
+### Dependencies
+
+- Added `picocolors`, `ora`
+- Updated vitest to v1.x for Node 20 compatibility
 
 ### Removed
 
 - None
 
-### Dependencies
+---
+
+## [0.2.1] - 2026-04-15
+
+### Fixed
+
+- v0.2.1 hotfix release (P0 critical issues)
 
 - Updated vitest to v1.x for Node 18 compatibility
 
