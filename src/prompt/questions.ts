@@ -30,8 +30,17 @@ export async function askPreviousTool(): Promise<PreviousTool> {
 }
 
 export async function askProviders(): Promise<string[]> {
+  const wantSelect = await confirm({
+    message: "AI 서비스 Provider를 선택하시겠습니까?",
+    default: true,
+  })
+
+  if (!wantSelect) {
+    return ["opencode-go"] // 기본값으로 OpenCode Go 설정
+  }
+
   const answer = await checkbox({
-    message: "어떤 AI 서비스를 사용하시겠습니까? (복수 선택 가능)",
+    message: "사용할 AI 서비스를 선택하세요 (복수 선택 가능)",
     choices: [
       { name: "OpenCode Go (무료)", value: "opencode-go", checked: true },
       { name: "OpenCode Zen (유료 큐레이션)", value: "opencode-zen" },
@@ -96,14 +105,14 @@ export async function askFeatureType(): Promise<FeatureType> {
 
 export async function askTestRunner(): Promise<string> {
   const answer = await select({
-    message: "테스트 도구는 무엇을 사용하시나요?",
+    message: "테스트 도구를 선택하세요",
     choices: [
       { name: "Vitest", value: "vitest" },
       { name: "Jest", value: "jest" },
       { name: "Playwright", value: "playwright" },
       { name: "Go test", value: "go test" },
       { name: "Pytest", value: "pytest" },
-      { name: "기타", value: "other" },
+      { name: "사용 안 함 / 해당 없음", value: "none" },
     ],
   })
   return answer
@@ -111,14 +120,14 @@ export async function askTestRunner(): Promise<string> {
 
 export async function askLinter(): Promise<string> {
   const answer = await select({
-    message: "린터/포맷터는 무엇을 사용하시나요?",
+    message: "린터/포맷터를 선택하세요",
     choices: [
       { name: "Biome", value: "biome" },
       { name: "ESLint", value: "eslint" },
       { name: "Prettier", value: "prettier" },
       { name: "Golangci-lint", value: "golangci-lint" },
       { name: "Ruff", value: "ruff" },
-      { name: "기타", value: "other" },
+      { name: "사용 안 함 / 해당 없음", value: "none" },
     ],
   })
   return answer
@@ -163,14 +172,33 @@ export async function askMCPServers(): Promise<MCPServerChoice[]> {
 }
 
 export async function askPlugins(): Promise<string[]> {
+  // Option 2: Confirm-first - 먼저 설치 여부를 확인
+  const wantPlugins = await confirm({
+    message: "추가 플러그인을 설치하시겠습니까?",
+    default: false,
+  })
+
+  if (!wantPlugins) {
+    return []
+  }
+
+  // 설치 시 선택지의 "없음" 옵션 추가
   const answer = await checkbox({
-    message: "플러그인을 설치하시겠습니까?",
+    message: "설치할 플러그인을 선택하세요 (복수 선택 가능)",
     choices: [
+      { name: "없음 (설치 안 함)", value: "__none__" },
       { name: "oh-my-opencode (멀티 에이전트 오케스트레이션)", value: "oh-my-opencode" },
       { name: "opencode-skillful (Skill 관리 확장)", value: "opencode-skillful" },
       { name: "opencode-wakatime (코딩 시간 추적)", value: "opencode-wakatime" },
     ],
+    required: false, // 빈 선택 허용
   })
+
+  // "없음" 선택 시 빈 배열 반환
+  if (answer.includes("__none__")) {
+    return []
+  }
+
   return answer
 }
 
