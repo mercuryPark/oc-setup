@@ -10,6 +10,7 @@ import { runAllChecks } from "./doctor/checks.js"
 import { formatReport } from "./doctor/reporter.js"
 import { runMigration, autoMigrate } from "./migrate/index.js"
 import { setLogLevel, setJsonMode, LogLevel, log, error, warn, json, isJsonMode } from "./utils/logger.js"
+import { printError } from "./utils/error.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pkg = JSON.parse(
@@ -70,8 +71,12 @@ preset
         for (const w of result.warnings) warn(`  • ${w}`)
       }
     } else {
-      error(`❌ Preset '${name}' 적용 실패`)
-      for (const w of result.warnings) error(`  • ${w}`)
+      const warning = result.warnings[0] || "알 수 없는 오류가 발생했습니다."
+      printError(
+        `Preset '${name}' 적용 실패`,
+        warning,
+        "'preset list'로 사용 가능한 프리셋을 확인하세요."
+      )
       process.exit(1)
     }
   })
@@ -90,6 +95,11 @@ program
     }
     log(result)
     if (result.startsWith("❌") || result.includes("찾을 수 없습니다")) {
+      printError(
+        "마이그레이션 실패",
+        result.replace("❌ ", "").split("\n")[0] || "마이그레이션 중 오류가 발생했습니다.",
+        "마이그레이션 대상 도구(claude-code, cursor, aider)가 올바르게 설치되어 있는지 확인하세요."
+      )
       process.exit(1)
     }
   })
@@ -127,7 +137,11 @@ process.on("SIGINT", () => {
 })
 
 process.on("uncaughtException", (err) => {
-  error(`Fatal error: ${err.message}`)
+  printError(
+    `치명적 오류: ${err.message}`,
+    "예상치 못한 오류가 발생했습니다.",
+    "문제 지속 시 GitHub Issues에 보고해주세요."
+  )
   process.exit(1)
 })
 
@@ -136,6 +150,11 @@ process.on("unhandledRejection", (reason) => {
     log("\n❌ 세팅이 취소되었습니다.")
     process.exit(130)
   }
-  error(`Unhandled rejection: ${reason}`)
+  const msg = reason instanceof Error ? reason.message : String(reason)
+  printError(
+    `처리되지 않은 오류: ${msg}`,
+    "비동기 작업 중 오류가 발생했습니다.",
+    "문제 지속 시 GitHub Issues에 보고해주세요."
+  )
   process.exit(1)
 })

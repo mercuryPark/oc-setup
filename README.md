@@ -1,4 +1,10 @@
+> **한국어** | [English](./README.en.md)
+
+<div align="center">
+
 # @hoyeon0722/opencode-setup
+
+**OpenCode 환경 세팅, 한 번의 실행으로.**
 
 [![npm version](https://img.shields.io/npm/v/@hoyeon0722/opencode-setup?color=cb3837)](https://www.npmjs.com/package/@hoyeon0722/opencode-setup)
 [![npm downloads](https://img.shields.io/npm/dm/@hoyeon0722/opencode-setup)](https://www.npmjs.com/package/@hoyeon0722/opencode-setup)
@@ -6,19 +12,19 @@
 [![coverage](https://codecov.io/gh/mercuryPark/oc-setup/branch/master/graph/badge.svg)](https://codecov.io/gh/mercuryPark/oc-setup)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![install size](https://packagephobia.com/badge?p=@hoyeon0722/opencode-setup)](https://packagephobia.com/result?p=@hoyeon0722/opencode-setup)
+![No Telemetry](https://img.shields.io/badge/telemetry-none-success)
 
-> **OpenCode 환경 세팅, 한 번의 실행으로.**
+</div>
 
-`@hoyeon0722/opencode-setup`은 OpenCode의 초기 환경 세팅을 대화형으로 도와주는 **플러그인 겸 CLI 도구**입니다. 모델 선택, 프로젝트 규칙, 커스텀 에이전트, 플러그인, Skill, 권한 설정까지 — 문서를 읽고 직접 JSON을 작성하는 과정을 한 번의 실행으로 대체합니다.
+---
 
-### ✨ 주요 기능
+## 빠른 시작
 
-- **17개 Skill 템플릿**: socket-io, payment-gateway, seo-optimization 등 6개 기능 영역 커버
-- **13개 전문 에이전트**: websocket-expert, payment-expert, security-reviewer 등
-- **MCP 서버 자동 설정**: Figma, GitHub, Notion 등 10개 서버 완전한 설정
-- **Claude Code 마이그레이션**: CLAUDE.md → AGENTS.md, skills 복사, rules 병합, hook 변환 (MCP 설정은 수동 필요)
+```bash
+npx @hoyeon0722/opencode-setup init
+```
 
-[설치](#설치) • [사용법](#사용법) • [CLI 레퍼런스](#cli-레퍼런스) • [설계 문서](./DESIGN.md)
+대화형 마법사가 시작됩니다. Provider 선택, 모델 설정, 에이전트, Skill, 권한까지 — 필요한 모든 파일을 생성합니다.
 
 ---
 
@@ -34,32 +40,18 @@ OpenCode는 75개 이상의 Provider와 수십 개의 설정 옵션을 지원합
 
 `opencode-setup`은 이 모든 질문에 대해 대화형으로 답을 수집하고, 최적의 설정 파일을 자동 생성합니다.
 
-## 빠른 시작
+---
 
-### Step 1: 설치
+## 주요 기능
 
-```bash
-# OpenCode 플러그인 (추천)
-npm install @hoyeon0722/opencode-setup
+- **17개 Skill 템플릿**: socket-io, payment-gateway, seo-optimization 등 6개 기능 영역 커버
+- **13개 전문 에이전트**: websocket-expert, payment-expert, security-reviewer 등
+- **MCP 서버 자동 설정**: Figma, GitHub, Notion 등 10개 서버 완전한 설정
+- **Claude Code 마이그레이션**: CLAUDE.md → AGENTS.md, skills 복사, rules 병합, hook 변환
 
-# 또는 npx로 직접 실행
-npx @hoyeon0722/opencode-setup init
-```
+[설치](#설치) • [사용법](#사용법) • [CLI 레퍼런스](#cli-레퍼런스) • [설계 문서](./DESIGN.md)
 
-### Step 2: 초기화
-
-```bash
-# 대화형 위자드 실행
-npx oc-setup init
-
-# 또는 프리셋만 적용
-npx oc-setup preset list
-npx oc-setup preset apply frontend-ts
-```
-
-### Step 3: 시작
-
-OpenCode를 재시작하면 바로 작업을 시작할 수 있습니다!
+---
 
 ## 설치
 
@@ -76,52 +68,32 @@ OpenCode를 재시작하면 자동 로드됩니다. OpenCode 안에서 AI에게 
 
 ### 방법 2: 독립 CLI
 
-⚠️ **전역 설치는 권장하지 않습니다.** `npx`를 사용하세요.
-
 ```bash
-# 권장: npx로 실행 (설치 불필요)
 npx @hoyeon0722/opencode-setup init
-
-# 전역 설치 시 (권장하지 않음)
-npm install -g @hoyeon0722/opencode-setup
-oc-setup init
 ```
 
-OpenCode 설정이 아직 없는 신규 사용자도 이 방법으로 바로 시작할 수 있습니다.
+---
 
 ## 사용법
 
-### 시나리오 1 — AI 코딩 도구가 처음인 경우
+### 시나리오 1 — 처음인 경우
 
 ```bash
 npx @hoyeon0722/opencode-setup init
 ```
 
-대화형 위자드가 실행됩니다:
+대화형 마법사가 실행됩니다:
 - AI 서비스 선택 (OpenCode Go, Anthropic, Google, OpenAI 등)
 - 월 예산 선택 (무료 ~ $50+)
 - 프로젝트 언어/프레임워크
 - 플러그인 선택
 - 자동화 수준 (안전/균형/자동)
 
-결과로 생성되는 파일:
-```
-~/.config/opencode/opencode.json     글로벌 설정
-./opencode.json                       프로젝트 설정
-./AGENTS.md                           프로젝트 규칙
-./.opencode/agents/                   커스텀 에이전트
-./.opencode/commands/                 커스텀 커맨드
-./.opencode/skills/                   Skill
-./.env.example                        환경변수 템플릿
-```
-
 ### 시나리오 2 — 프리셋으로 빠르게 세팅
 
 ```bash
-# 프리셋 목록 확인
 npx oc-setup preset list
 npx oc-setup preset apply frontend-ts
-npx oc-setup preset apply backend-go
 npx oc-setup preset apply balanced
 ```
 
@@ -146,17 +118,10 @@ npx oc-setup preset apply balanced
 
 ```bash
 npx oc-setup doctor
-```
-
-OpenCode, Bun, API 키, 설정 파일, LSP 서버, 플러그인 상태를 점검합니다.
-
-### 시나리오 4 — 설정 검증
-
-```bash
 npx oc-setup validate
 ```
 
-opencode.json과 AGENTS.md의 구조와 유효성을 검증합니다.
+---
 
 ## CLI 레퍼런스
 
@@ -169,24 +134,9 @@ opencode.json과 AGENTS.md의 구조와 유효성을 검증합니다.
 | `oc-setup validate` | `setup_validate` | 설정 검증 |
 | `oc-setup doctor` | `setup_doctor` | 환경 진단 |
 
-## 생성되는 파일
+---
 
-```
-~/.config/opencode/
-├── opencode.json           글로벌 (Provider, 모델, 테마, 플러그인)
-└── tui.json                TUI 설정
-
-{project}/
-├── opencode.json           프로젝트 (권한, MCP, LSP, 에이전트 오버라이드)
-├── AGENTS.md               프로젝트 규칙, 코딩 표준
-├── .env.example            환경변수 템플릿
-└── .opencode/
-    ├── agents/             커스텀 에이전트 (reviewer, tester, planner)
-    ├── commands/           커스텀 커맨드 (/test, /lint, /review, /plan)
-    └── skills/             Skill (code-review, testing, frontend-design)
-```
-
-## Claude Code 매핑 가이드
+## Claude Code 마이그레이션 가이드
 
 | Claude Code | OpenCode | 비고 |
 |-------------|----------|------|
@@ -198,60 +148,74 @@ opencode.json과 AGENTS.md의 구조와 유효성을 검증합니다.
 | MCP 서버 | opencode.json mcp | 설정 구조 변환 |
 | extended thinking | reasoningEffort | high / medium / low |
 
-## 기능
+---
 
-### 대화형 위자드
-- 경험 수준 자동 감지
-- 마이그레이션 옵션 제공
-- Provider & 예산 기반 모델 추천
-- 플러그인 & MCP 서버 선택
-- 자동화 수준 설정
+## 생성되는 파일
 
-### 프리셋 시스템
-- 5개 모델 프리셋 (budget, balanced, power, minimax, google-only)
-- 4개 스택 프리셋 (frontend-ts, backend-go, backend-python, fullstack)
-- 템플릿 기반 파일 생성
+```
+~/.config/opencode/
+  opencode.json           글로벌 (Provider, 모델, 테마, 플러그인)
 
-### 환경 진단
-- OpenCode & Bun 설치 상태
-- API 키 존재 여부
-- 설정 파일 유효성
-- LSP 서버 가용성
-- 플러그인 상태
+{project}/
+  opencode.json           프로젝트 (권한, MCP, LSP, 에이전트 오버라이드)
+  AGENTS.md               프로젝트 규칙, 코딩 표준
+  .env.example            환경변수 템플릿
+  .opencode/
+    agents/               커스텀 에이전트 (reviewer, tester, planner)
+    commands/             커스텀 커맨드 (/test, /lint, /review, /plan)
+    skills/               Skill (code-review, testing, frontend-design)
+```
 
-### 설정 검증
-- opencode.json 스키마 검증
-- AGENTS.md 구조 검증
-- 권한 설정 유효성
+---
+
+## CLI 플래그
+
+모든 명령어는 다음 전역 플래그를 지원합니다:
+
+| 플래그 | 설명 |
+|--------|------|
+| `--json` | 머신이 읽을 수 있는 JSON 출력 |
+| `-q, --quiet` | 정보 출력 숨김 |
+| `-v, --verbose` | 상세 출력 표시 |
+
+---
+
+## 프라이버시
+
+- **텔레메트리 없음.** 이 도구는 어떠한 데이터도 수집하거나 전송하지 않습니다.
+- **네트워크 호출 없음.** 로컬 파일 조작만 수행합니다.
+- **분석 없음.** 추적, 메트릭, 데이터 수집 제로.
+
+설정 데이터는 사용자의 머신에만 저장됩니다.
+
+---
 
 ## 개발
 
 ```bash
-#克隆
 git clone https://github.com/mercuryPark/oc-setup.git
-cd opencode-setup
-
-# 의존성 설치
-bun install
-
-# 빌드
-bun run build
-
-# 테스트
-bun test
-
-# 개발 모드
-bun run dev
+cd oc-setup
+npm install
+npm run build
+npm run test
 ```
+
+Node.js >= 20 필요.
+
+---
 
 ## 라이선스
 
-MIT
+[MIT](./LICENSE)
 
 ---
 
 <div align="center">
 
 **Zero learning curve. Maximum power.**
+
+<a href="https://github.com/mercuryPark/oc-setup/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=mercuryPark/oc-setup" />
+</a>
 
 </div>

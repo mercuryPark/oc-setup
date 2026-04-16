@@ -39,3 +39,4 @@ coverage/
 .omc/
 .sisyphus/
 *.bak.*
+FINAL_TASK_SPEC*.md

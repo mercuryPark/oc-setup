@@ -32,6 +32,7 @@ import { migrateClaudeCode } from "../migrate/claude-code.js"
 import { migrateCursor } from "../migrate/cursor.js"
 import { migrateAider } from "../migrate/aider.js"
 import { getFeatureConfig } from "../core/feature-presets.js"
+import { randomTip } from "../utils/tips.js"
 
 async function showPreview(profile: UserProfile, homeDir: string, projectDir: string): Promise<boolean> {
   console.log("\n" + "=".repeat(60))
@@ -236,6 +237,7 @@ export async function runInitWizard(): Promise<void> {
     }
 
     console.log("\n✅ 생성 완료!\n")
+    console.log(`💡 ${randomTip()}\n`)
 
     console.log("🔍 설정 검증 중...")
     const validationResult = await runValidation(projectDir)
